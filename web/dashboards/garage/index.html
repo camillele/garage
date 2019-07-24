@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+          content="Tableau de bord pour abribus par reelyActive.">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../style/bootstrap.min.css">
+    <link rel="stylesheet" href="../../style/reelyactive.css">
+    <title> Abribus par reelyActive </title>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-reelyactive bg-reelyactive">
+      <a class="navbar-brand" href="https://www.reelyactive.com/">
+        <img class="mr-3" src="../../images/reelyactive-logo-nav.png"
+             width="165" height="30" alt="reelyActive">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse"
+              data-target="#navbarItems" aria-controls="navbarItems"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarItems">
+        <ul class="navbar-nav mr-auto"></ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="../../"> <i class="fas fa-home"></i> </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown"
+               role="button" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+              <i class="fas fa-question-circle"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right"
+                 aria-labelledby="navbarDropdown">
+              <a class="dropdown-item"
+                 href="https://www.reelyactive.com/how-we-observe/#digital">
+                <i class="fas fa-mouse-pointer"></i>
+                Behaviour tracking free &nbsp;
+                <span class="badge badge-success">
+                  <i class="fas fa-user-shield"></i>
+                </span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" target="_blank"
+                 href="https://getbootstrap.com" >
+                <i class="fab fa-bootstrap"></i>
+                Bootstrap 4 &nbsp;
+                <span class="badge badge-light">
+                  <i class="fab fa-osi"></i> MIT
+                </span>
+              </a>
+              <a class="dropdown-item" target="_blank"
+                 href="https://fontawesome.com" >
+                <i class="fab fa-font-awesome"></i>
+                Font Awesome (Free) &nbsp;
+                <span class="badge badge-light">
+                  <i class="fab fa-creative-commons"></i>
+                  <i class="fab fa-osi"></i> MIT
+                </span>
+              </a>
+              <a class="dropdown-item" target="_blank"
+                 href="https://jquery.com" >
+                <i class="fab fa-js"></i>
+                JQuery &nbsp;
+                <span class="badge badge-light">
+                  <i class="fab fa-osi"></i> MIT
+                </span>
+              </a>
+              <a class="dropdown-item" target="_blank"
+                 href="https://github.com/reelyactive/web-style-guide/" >
+                <i class="fas fa-code"></i>
+                Web Style Guide &nbsp;
+                <span class="badge badge-light">
+                  <i class="fab fa-osi"></i> MIT
+                </span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" target="_blank"
+                 href="https://www.reelyactive.com/made-in-montreal/" >
+                <i class="fab fa-canadian-maple-leaf"></i>
+                Made in Montr&eacute;al &nbsp;
+                <i class="fas fa-city"></i>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Content -->
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-10">
+          <h1 class="mt-4">AbI - Abribus Intelligent</h1>
+          <!-- First row real-time Dashboard-->
+          <div class="row">
+            <div class="col-sm-6 mt-4">
+              <div class="card text-white bg-primary mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-clock"></i> Time</h2>
+                <div class="card-body">
+                  <p class="card-text text-center" id="date" style="font-size: 8rem"></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 mt-4">
+              <div class="card text-white bg-success mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-thermometer-half"></i> Temperature</h2>
+                <div class="card-body">
+                  <p class="card-text text-center" style="font-size: 8rem;">
+                    <span id="temperature"></span>&deg;C 
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 mt-4">
+              <div class="card text-white bg-success mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-users"></i> Total number of people</h2>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <p class="card-text text-right" id="occupancycount" style="font-size:7rem;"></p>
+                    </div>
+                    <div class="col-sm-4 mt-3">
+                      <p class="card-text"><i class="fas fa-user" style="font-size:7rem;"></i></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Second Row real-time Dashboard-->
+          <div class="card-deck mt-4">
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/office.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white"><i class="fas fa-clock"></i> Office</h3> 
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="occupancyInternCount">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="occupancyManagerCount">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="occupancyVisitorCount">0</span></span></dt>
+                  </dl>
+                  <dl class="row">
+                      <dt class="col-sm-4"><div id="idDisplacementIntern" class="" role="status"><span class="sr-only">Loading...</span></div></dt>
+                      <dd class="col-sm-4"><div id="idDisplacementManager" class="" role="status"><span class="sr-only">Loading...</span></div></dd>
+                      <dt class="col-sm-4"><div id="idDisplacementVisitor" class="" role="status"><span class="sr-only">Loading...</span></div></dt>
+                    </dl>
+                </h3>
+              </div>
+            </div>
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/reception.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white"><i class="fas fa-concierge-bell"></i> Reception</h3>
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="">0</span></span></dt>
+                  </dl>
+                </h3>
+              </div>
+            </div>
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/lab.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white "><i class="fas fa-laptop-code"></i> Lab</h3>
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="">0</span></span></dt>
+                  </dl>
+                </h3>
+              </div>
+            </div>
+          </div>
+          <!--Content-->
+          <div class="col-sm-3 mt-4">
+            <div class="card text-white bg-primary mb-3" style="height: 20rem;">
+              <h2 class="card-header"><i class="fas fa-thermometer-half"></i> Person</h2>
+              <div class="card-body">
+                <p class="card-text text-center" style="font-size: 8rem;">
+                  <span id="person"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            <p> &nbsp; </p>
+            <div class="row justify-content-center">
+              <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
+                <!-- Year Selector -->
+                <nav aria-label="Year selector">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item year active" id="2019">
+                      <a class="page-link"> 2019 </a>
+                    </li>
+                  </ul>
+                </nav>
+                <!-- Card Deck -->
+                <div class="card-deck" id="cards">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Plots Content-->
+          <div class="linechart-plot">
+          <!--Line Chart-->
+          <div class="card mt-4">
+            <h3 class="card-header">Nombre d'appareils détectés par minute</h3>
+            <div class="card-body">
+              <div id="linechart"></div>
+          </div>
+          </div>
+        </div>
+          <!--Heatmap-->
+          <div calss="heatmap-plot">
+            <div class="card mt-4">
+             <h3 class="card-header">Carte thermique de l'abribus</h3>
+             <div class="card-body">
+               <div id="heatmap"></div>
+             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <a href="https://github.com/reelyactive/hlc-dashboard-demos">
+        hlc-dashboard-demos
+      </a>
+      &nbsp; | &nbsp;
+      <a href="https://www.reelyactive.com"> &copy; reelyActive 2019 </a>
+    </footer>
+    <script defer src="../../js/solid.min.js"></script>
+    <script defer src="../../js/brands.min.js"></script>
+    <script defer src="../../js/fontawesome.min.js"></script>
+    <script src="../../js/jquery-3.4.0.min.js"></script>
+    <script src="../../js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/socket.io.slim.js"></script>
+    <script src="../../js/beaver.js"></script>
+    <script src="../../js/cuttlefish.js"></script>
+    <script src="../../js/cormorant.js"></script>
+    <script src="js/abribus.js"></script>
+  </body>
+</html>
