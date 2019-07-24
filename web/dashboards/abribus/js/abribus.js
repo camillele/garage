@@ -14,13 +14,22 @@ const SEAT_OCCUPANCY_RSSI_THRESHOLD = -75;
 // DOM elements
 let temperature = document.querySelector("#temperature");
 let humidity = document.querySelector("#humidity");
-let displayStatus = document.querySelector("#displaystatus");
-let displayStatusIcon = document.querySelector("#displaystatusicon");
-let leftSeat = document.querySelector("#leftseat");
-let rightSeat = document.querySelector("#rightseat");
 let occupancyCount = document.getElementById("occupancycount");
+let occupancyManagerCount = document.getElementById("occupancyManagerCount");
+let occupancyVisitorCount = document.getElementById("occupancyVisitorCount");
+let occupancyInternCount = document.getElementById("occupancyInternCount");
 let dateNode = document.getElementById("date");
 let presenceArray = [];
+let presenceOfficeInterns = [];
+let presenceOfficeManagers = [];
+let presenceOfficeVisitors = [];
+let internList = ["ac233f24ae6e"];
+let managerList = ["ac233f265d90"];
+let visitorList = ["ac233f24c069"];
+const EARLIEST_YEAR = '2012';
+const LATEST_YEAR = '2019';
+let years = document.querySelectorAll('.year');
+let cards = document.querySelector('#cards');
 
 // Other variables
 let baseUrl =
@@ -33,6 +42,55 @@ let config = null;
 
 // Other initialisation
 
+const STORIES_BY_PERSON = {
+  "2019": [
+    "https://reelyactive.github.io/beacorcut-demos/stories/camille/",
+    "https://reelyactive.github.io/beacorcut-demos/stories/furaha/"
+  ]
+};
+// Update the year
+function handleYearSelection(event) {
+  let selectedYear = this;  // currentTarget of event
+  let selectedYearId = selectedYear.getAttribute('id');
+
+  years.forEach(function(year) {
+    year.setAttribute('class', 'page-item year');
+  });
+  selectedYear.setAttribute('class', 'page-item year active');
+
+  let selectedYearStoryUrls = STORIES_BY_PERSON[selectedYearId];
+  updateCards(selectedYearStoryUrls);
+}
+
+
+// Update the cards to display based on the given story URLs
+function updateCards(storyUrls) {
+  while(cards.firstChild) {
+    cards.removeChild(cards.firstChild);
+  }
+
+  storyUrls.forEach(function(storyUrl) {
+    cormorant.retrieveStory(storyUrl, function(story) {
+      let div = document.createElement('div');
+      div.setAttribute('class', 'card bg-light');
+      cards.appendChild(div);
+      cuttlefish.render(story, div);
+    });
+  });
+}
+
+
+// Observe year selection clicks
+years.forEach(function(year) {
+  year.addEventListener('click', handleYearSelection);
+});
+
+
+// On page load, select the latest year
+updateCards(STORIES_BY_PERSON[LATEST_YEAR]);
+
+
+
 // Initialise beaver to listen for raddecs on the websocket
 function initialiseBeaver(hlcServerUrl) {
   let socket = io.connect(hlcServerUrl);
@@ -41,27 +99,36 @@ function initialiseBeaver(hlcServerUrl) {
   // All events
   beaver.on([0, 1, 2, 3, 4], function(raddec) {
     let isDisappearance = raddec.events.includes(4);
+    let isDisplacement = raddec.events.includes(1);
     handleRaddec(raddec, isDisappearance);
   });
 }
 
 // Handle incoming raddec
-function handleRaddec(raddec, isDisappearance) {
+function handleRaddec(raddec, isDisappearance, isDisplacement) {
   switch (raddec.transmitterId) {
     case config.environmentalBeaconId:
       handleEnvironmentalBeacon(raddec);
       break;
-    case config.leftSeatBeaconId:
-      handleLeftSeatBeacon(raddec);
-      break;
-    case config.rightSeatBeaconId:
-      handleRightSeatBeacon(raddec);
-      break;
-    case config.displayBeaconId:
-      handleDisplayBeacon(raddec);
-      break;
     default:
       updateOccupancy(raddec, isDisappearance );
+      updateListZones(raddec, isDisappearance );
+      displayDisplacement(raddec,isDisplacement);
+  }
+}
+
+//function is displacement 
+function displayDisplacement(raddec,isDisplacement) {
+  if (isDisplacement) {
+    if(presenceOfficeInterns.includes(raddec.transmitterId)) {
+      idDisplacementIntern.className = "spinner-grow text-danger";
+    }
+    else if(presenceOfficeManagers.includes(raddec.transmitterId)) {
+      idDisplacementManager.className = "spinner-grow text-warning";
+    }
+    else if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
+      idDisplacementVisitor.className = "spinner-grow text-secondary";
+    }
   }
 }
 
@@ -73,6 +140,7 @@ function updateOccupancy(raddec, isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
         presenceArray.push(raddec.transmitterId);
         occupancyCount.textContent = presenceArray.length;
+        console.log(raddec);
       }
     } 
     else {
@@ -83,6 +151,66 @@ function updateOccupancy(raddec, isDisappearance) {
     }
   }
   return presenceArray.length;
+}
+
+// List person in the Office
+function updateListZones(raddec, isDisappearance) {
+  let isOccupant = raddec.transmitterId.startsWith("ac233");
+  let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
+  let isIntern = internList.includes(raddec.transmitterId);
+  let isManager = managerList.includes(raddec.transmitterId);
+  let isVisitor = visitorList.includes(raddec.transmitterId);
+  if(isOccupant) {
+    if(isOffice) {
+      //Display  number of interns for the Office
+      if(isIntern) {
+        if(!isDisappearance) {
+          if(!presenceOfficeInterns.includes(raddec.transmitterId)) {
+            presenceOfficeInterns.push(raddec.transmitterId);
+            occupancyInternCount.textContent = presenceOfficeInterns.length;
+          }
+        } 
+        else {
+          if(presenceOfficeInterns.includes(raddec.transmitterId)) {
+            presenceOfficeInterns.splice(presenceOfficeInterns.indexOf(raddec.transmitterId), 1);
+            occupancyInternCount.textContent = presenceOfficeInterns.length;
+            console.log(raddec.transmitterId);
+          }
+        }
+      }
+      //Display number of managers for the office
+      else if(isManager) {
+        if(!isDisappearance) {
+          if(!presenceOfficeManagers.includes(raddec.transmitterId)) {
+            presenceOfficeManagers.push(raddec.transmitterId);
+            occupancyManagerCount.textContent = presenceOfficeManagers.length;
+          }
+        } 
+        else {
+          if(presenceOfficeManagers.includes(raddec.transmitterId)) {
+            presenceOfficeManagers.splice(presenceOfficeManagers.indexOf(raddec.transmitterId), 1);
+            occupancyManagerCount.textContent = presenceOfficeManagers.length;
+          }
+        }
+      } 
+      //Display number of visitors for the office
+      else if(isVisitor) {
+        if(!isDisappearance) {
+          if(!presenceOfficeVisitors.includes(raddec.transmitterId)) {
+            presenceOfficeVisitors.push(raddec.transmitterId);
+            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
+          }
+        } 
+        else {
+          if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
+            presenceOfficeVisitors.splice(presenceOfficeVisitors.indexOf(raddec.transmitterId), 1);
+            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
+          }
+        }
+      }
+    }
+  }
+  return presenceOfficeInterns, presenceOfficeManagers, presenceOfficeVisitors;
 }
 
 function dispTime() {
@@ -104,46 +232,6 @@ function handleEnvironmentalBeacon(raddec) {
       parseInt(packet.substr(48, 2), 16) +
       parseInt(packet.substr(50, 2), 16) / 256;
     temperature.textContent = t.toFixed(1);
-    humidity.textContent = h.toFixed(1);
-  }
-}
-
-// Handle left seat beacon data
-function handleLeftSeatBeacon(raddec) {
-  let rssi = raddec.rssiSignature[0].rssi;
-  if (rssi > SEAT_OCCUPANCY_RSSI_THRESHOLD) {
-    id_seatLeft.className = "card text-white bg-success mb-3";
-  } else {
-    id_seatLeft.className = "card text-white bg-danger mb-3";
-  }
-}
-
-// Handle right seat beacon data
-function handleRightSeatBeacon(raddec) {
-  let rssi = raddec.rssiSignature[0].rssi;
-  if (rssi > SEAT_OCCUPANCY_RSSI_THRESHOLD) {
-    id_seatRight.className = "card text-white bg-success mb-3";
-  } else {
-    id_seatRight.className = "card text-white bg-danger mb-3";
-  }
-}
-
-// Handle left seat beacon data
-function handleDisplayBeacon(raddec) {
-  let packet = raddec.packets[0];
-  let isSensorPacket = packet && packet.length === 58;
-
-  if (isSensorPacket) {
-    let isVisibleLight = parseInt(packet.substr(44, 2), 16) > 0;
-    if (isVisibleLight) {
-      id_status.className = "card text-white bg-success mb-3";
-      displayStatusIcon.style.transform  = "rotate(0deg)";
-      displayStatusIcon.style.color  = "white";
-    } else {
-      id_status.className = "card text-white bg-danger mb-3";
-      displayStatusIcon.style.transform  = "rotate(180deg)";
-      displayStatusIcon.style.color  = "white";
-    }
   }
 }
 
@@ -171,49 +259,26 @@ function updateGraphs() {
         }
       };
       Plotly.newPlot("linechart", data, layout, { showSendToCloud: true });
-      // Day of Week graph
-      getJson(baseUrl + HOUR_OF_DAY_ROUTE, function(response) {
+
+      // Zone by Time graph
+      getJson(baseUrl + ZONE_BY_TIME_ROUTE, function(response) {
         if (response) {
-          let hourofday = response;
-          var trace1 = {
-            x: hourofday.x,
-            y: hourofday.y,
-            type: "bar",
-            name: "Affluence Semaine",
-            marker: {
-              color: "rgb(49,130,189)",
-              opacity: 0.7
+          let zonebytime = response;
+          var data = [
+            {
+              z: zonebytime.z,
+              x: zonebytime.x,
+              y: zonebytime.y,
+              type: "heatmap"
             }
-          };
-          var data = [trace1];
+          ];
           var layout = {
             xaxis: {
               tickangle: -45
             }
           };
-          Plotly.newPlot("barchart", data, layout, { showSendToCloud: true });
-
-          // Zone by Time graph
-          getJson(baseUrl + ZONE_BY_TIME_ROUTE, function(response) {
-            if (response) {
-              let zonebytime = response;
-              var data = [
-                {
-                  z: zonebytime.z,
-                  x: zonebytime.x,
-                  y: zonebytime.y,
-                  type: "heatmap"
-                }
-              ];
-              var layout = {
-                xaxis: {
-                  tickangle: -45
-                }
-              };
-              Plotly.newPlot("heatmap", data, layout, { showSendToCloud: true});
-            }
-          });
-        }
+          Plotly.newPlot("heatmap", data, layout, { showSendToCloud: true});
+         }
       });
     }
   });

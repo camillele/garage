@@ -100,27 +100,26 @@
           <!-- First row real-time Dashboard-->
           <div class="row">
             <div class="col-sm-6 mt-4">
-              <div class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-clock"></i> Heure Locale</h3>
+              <div class="card text-white bg-primary mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-clock"></i> Time</h2>
                 <div class="card-body">
                   <p class="card-text text-center" id="date" style="font-size: 8rem"></p>
                 </div>
               </div>
             </div>
             <div class="col-sm-3 mt-4">
-              <div id="id_status" class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-tablet-alt"></i> Etat de l'&eacute;cran</h3>
+              <div class="card text-white bg-success mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-thermometer-half"></i> Temperature</h2>
                 <div class="card-body">
-                  <p class="card-text text-center" style="font-size: 75px;" id="displaystatusicon">
-                    <i class="fas fa-toggle-on"></i>
+                  <p class="card-text text-center" style="font-size: 8rem;">
+                    <span id="temperature"></span>&deg;C 
                   </p>
-                  <!--<p class="card-text text-center" id="displaystatus"></p>-->
                 </div>
               </div>
             </div>
             <div class="col-sm-3 mt-4">
-              <div class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-users"></i> Nombre de personnes dans l'AbI</h3>
+              <div class="card text-white bg-success mb-3" style="height: 20rem;">
+                <h2 class="card-header"><i class="fas fa-users"></i> Total number of people</h2>
                 <div class="card-body">
                   <div class="row">
                     <div class="col-sm-6">
@@ -135,48 +134,87 @@
             </div>
           </div>
           <!--Second Row real-time Dashboard-->
-          <div class="row">
-            <div class="col-sm-3 mt-4">
-              <div id="id_seatLeft" class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-chair"></i> Etat du si&egrave;ge gauche</h3>
-                <div class="card-body">
-                  <p class="card-text text-center" style="font-size: 8rem;">
-                    <span id="leftseat"><i class="fas fa-chair"></i></span>
-                  </p>
+          <div class="card-deck mt-4">
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/office.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white"><i class="fas fa-clock"></i> Office</h3> 
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="occupancyInternCount">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="occupancyManagerCount">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="occupancyVisitorCount">0</span></span></dt>
+                  </dl>
+                  <dl class="row">
+                      <dt class="col-sm-4"><div id="idDisplacementIntern" class="" role="status"><span class="sr-only">Loading...</span></div></dt>
+                      <dd class="col-sm-4"><div id="idDisplacementManager" class="" role="status"><span class="sr-only">Loading...</span></div></dd>
+                      <dt class="col-sm-4"><div id="idDisplacementVisitor" class="" role="status"><span class="sr-only">Loading...</span></div></dt>
+                    </dl>
+                </h3>
+              </div>
+            </div>
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/reception.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white"><i class="fas fa-concierge-bell"></i> Reception</h3>
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="">0</span></span></dt>
+                  </dl>
+                </h3>
+              </div>
+            </div>
+            <div class="card text-white bg-dark mb-3">
+              <img class="card-img-top" src="../../images/lab.png" alt="Card image cap">
+              <div class="card-img-overlay">
+                <h3 class="card-title text-white "><i class="fas fa-laptop-code"></i> Lab</h3>
+              </div>
+              <div class="card-body">
+                <h3 class="card-text text-center mt-4">
+                  <dl class="row">
+                    <dt class="col-sm-4"><span class="badge badge-danger">Interns: <span id="">0</span></span></dt>
+                    <dd class="col-sm-4"><span class="badge badge-warning">Managers: <span id="">0</span></span></dd>
+                    <dt class="col-sm-4"><span class="badge badge-secondary">Visitors: <span id="">0</span></span></dt>
+                  </dl>
+                </h3>
+              </div>
+            </div>
+          </div>
+          <!--Content-->
+          <div class="col-sm-3 mt-4">
+            <div class="card text-white bg-primary mb-3" style="height: 20rem;">
+              <h2 class="card-header"><i class="fas fa-thermometer-half"></i> Person</h2>
+              <div class="card-body">
+                <p class="card-text text-center" style="font-size: 8rem;">
+                  <span id="person"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            <p> &nbsp; </p>
+            <div class="row justify-content-center">
+              <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
+                <!-- Year Selector -->
+                <nav aria-label="Year selector">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item year active" id="2019">
+                      <a class="page-link"> 2019 </a>
+                    </li>
+                  </ul>
+                </nav>
+                <!-- Card Deck -->
+                <div class="card-deck" id="cards">
                 </div>
               </div>
             </div>
-            <div class="col-sm-3 mt-4">
-              <div id="id_seatRight" class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-chair"></i> Etat du si&egrave;ge droit</h3>
-                <div class="card-body">
-                  <p class="card-text text-center" style="font-size: 8rem;">
-                    <span id="rightseat"><i class="fas fa-chair"></i></span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-3 mt-4">
-              <div class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-thermometer-half"></i> Etat de la temp&eacute;rature</h3>
-                <div class="card-body">
-                  <p class="card-text text-center" style="font-size: 6rem;">
-                    <span id="temperature"></span>&deg;C 
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-3 mt-4">
-              <div class="card text-white bg-primary mb-3" style="height: 18rem;">
-                <h3 class="card-header"><i class="fas fa-tint"></i> Etat de l'humidit&eacute;</h3>
-                <div class="card-body">
-                  <p class="card-text text-center" style="font-size: 6rem;">
-                    <span id="humidity"></span>%
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>  
+          </div>
           <!--Plots Content-->
           <div class="linechart-plot">
           <!--Line Chart-->
@@ -187,15 +225,6 @@
           </div>
           </div>
         </div>
-          <!--Bar Chart-->
-          <div class="barchart-plot">
-          <div class="card mt-4">
-            <h3 class="card-header">Heures d'affluences sur la journée (12h)</h3>
-            <div class="card-body">
-              <div id="barchart"></div>
-            </div>
-          </div>
-          </div>
           <!--Heatmap-->
           <div calss="heatmap-plot">
             <div class="card mt-4">
@@ -203,28 +232,7 @@
              <div class="card-body">
                <div id="heatmap"></div>
              </div>
-          </div>
-          </div>
-          <!--Logos-->
-          <div class="row mt-4">
-            <div class="col-sm-4 mt-4 mb-4 text-center">
-              <a href="http://www.videotron.com/">
-                <img class="mr-3" src="../../images/logo-videotron.png"
-                  width="165" height="30" alt="videotron">
-              </a>
             </div>
-            <div class="col-sm-4 mt-4 mb-4 text-center">
-              <a href="https://www.quartierinnovationmontreal.com/">
-                <img class="mr-3" src="../../images/logo-qi.png"
-                  height="30" alt="quartier de l'innovation">
-              </a>
-            </div>
-            <div class="col-sm-4 mt-4 mb-4 text-center">
-              <a href="https://labiot.uqam.ca/">
-                <img class="mr-3" src="../../images/logo-lab.png"
-                  height="30" alt="Lab IoT ">
-              </a>
-            </div>      
           </div>
         </div>
       </div>
@@ -243,6 +251,8 @@
     <script src="../../js/bootstrap.bundle.min.js"></script>
     <script src="../../js/socket.io.slim.js"></script>
     <script src="../../js/beaver.js"></script>
+    <script src="../../js/cuttlefish.js"></script>
+    <script src="../../js/cormorant.js"></script>
     <script src="js/abribus.js"></script>
   </body>
 </html>
