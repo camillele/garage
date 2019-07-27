@@ -4,7 +4,7 @@
  */
 
 // Constants
-const BASE_ROUTE = "/api/abribus";
+const BASE_ROUTE = "/api/ericsson";
 const CONFIG_ROUTE = BASE_ROUTE + "/config";
 const MINUTE_OF_HOUR_ROUTE = BASE_ROUTE + "/minuteofhour";
 const HOUR_OF_DAY_ROUTE = BASE_ROUTE + "/hourofday";
