@@ -187,53 +187,53 @@
             </div>
           </div>
           <!--Content-->
-          <div class="col-sm-3 mt-4">
-            <div class="card text-white bg-primary mb-3" style="height: 20rem;">
-              <h2 class="card-header"><i class="fas fa-thermometer-half"></i> Person</h2>
-              <div class="card-body">
-                <p class="card-text text-center" style="font-size: 8rem;">
-                  <span id="person"></span>
-                </p>
+        <!-- Content -->
+        <div class="container-fluid">
+          <p> &nbsp; </p>
+          <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
+              <!-- Year Selector -->
+              <nav aria-label="Year selector">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" id="backward">
+                    <a class="page-link"> <i class="fas fa-backward"></i> </a>
+                  </li>
+                  <li class="page-item year" id="2012">
+                    <a class="page-link"> 2012 </a>
+                  </li>
+                  <li class="page-item year" id="2013">
+                    <a class="page-link"> 2013 </a>
+                  </li>
+                  <li class="page-item year" id="2014">
+                    <a class="page-link"> 2014 </a>
+                  </li>
+                  <li class="page-item year" id="2015">
+                    <a class="page-link"> 2015 </a>
+                  </li>
+                  <li class="page-item year" id="2016">
+                    <a class="page-link"> 2016 </a>
+                  </li>
+                  <li class="page-item year" id="2017">
+                    <a class="page-link"> 2017 </a>
+                  </li>
+                  <li class="page-item year" id="2018">
+                    <a class="page-link"> 2018 </a>
+                  </li>
+                  <li class="page-item year active" id="2019">
+                    <a class="page-link"> 2019 </a>
+                  </li>
+                  <li class="page-item disabled" id="forward">
+                    <a class="page-link"> <i class="fas fa-forward"></i> </a>
+                  </li>
+                </ul>
+              </nav>
+              <!-- Card Deck -->
+              <div class="card-deck" id="cards">
               </div>
             </div>
-          </div>
-          <div class="container-fluid">
-            <p> &nbsp; </p>
-            <div class="row justify-content-center">
-              <div class="col-sm-12 col-md-12 col-lg-10 col-xl-8">
-                <!-- Year Selector -->
-                <nav aria-label="Year selector">
-                  <ul class="pagination justify-content-center">
-                    <li class="page-item year active" id="2019">
-                      <a class="page-link"> 2019 </a>
-                    </li>
-                  </ul>
-                </nav>
-                <!-- Card Deck -->
-                <div class="card-deck" id="cards">
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--Plots Content-->
-          <div class="linechart-plot">
-          <!--Line Chart-->
-          <div class="card mt-4">
-            <h3 class="card-header">Nombre d'appareils détectés par minute</h3>
-            <div class="card-body">
-              <div id="linechart"></div>
-          </div>
           </div>
         </div>
-          <!--Heatmap-->
-          <div calss="heatmap-plot">
-            <div class="card mt-4">
-             <h3 class="card-header">Carte thermique de l'abribus</h3>
-             <div class="card-body">
-               <div id="heatmap"></div>
-             </div>
-            </div>
-          </div>
+          <!--Plots Content-->
         </div>
       </div>
     </div>
@@ -253,6 +253,6 @@
     <script src="../../js/beaver.js"></script>
     <script src="../../js/cuttlefish.js"></script>
     <script src="../../js/cormorant.js"></script>
-    <script src="js/abribus.js"></script>
+    <script src="js/garage.js"></script>
   </body>
 </html>

@@ -4,7 +4,7 @@
  */
 
 // Constants
-const BASE_ROUTE = "/api/abribus";
+const BASE_ROUTE = "/api/ericsson";
 const CONFIG_ROUTE = BASE_ROUTE + "/config";
 const MINUTE_OF_HOUR_ROUTE = BASE_ROUTE + "/minuteofhour";
 const HOUR_OF_DAY_ROUTE = BASE_ROUTE + "/hourofday";
@@ -28,8 +28,8 @@ let managerList = ["ac233f265d90"];
 let visitorList = ["ac233f24c069"];
 const EARLIEST_YEAR = '2012';
 const LATEST_YEAR = '2019';
-let years = document.querySelectorAll('.year');
 let cards = document.querySelector('#cards');
+
 
 // Other variables
 let baseUrl =
@@ -41,55 +41,6 @@ let baseUrl =
 let config = null;
 
 // Other initialisation
-
-const STORIES_BY_PERSON = {
-  "2019": [
-    "https://reelyactive.github.io/beacorcut-demos/stories/camille/",
-    "https://reelyactive.github.io/beacorcut-demos/stories/furaha/"
-  ]
-};
-// Update the year
-function handleYearSelection(event) {
-  let selectedYear = this;  // currentTarget of event
-  let selectedYearId = selectedYear.getAttribute('id');
-
-  years.forEach(function(year) {
-    year.setAttribute('class', 'page-item year');
-  });
-  selectedYear.setAttribute('class', 'page-item year active');
-
-  let selectedYearStoryUrls = STORIES_BY_PERSON[selectedYearId];
-  updateCards(selectedYearStoryUrls);
-}
-
-
-// Update the cards to display based on the given story URLs
-function updateCards(storyUrls) {
-  while(cards.firstChild) {
-    cards.removeChild(cards.firstChild);
-  }
-
-  storyUrls.forEach(function(storyUrl) {
-    cormorant.retrieveStory(storyUrl, function(story) {
-      let div = document.createElement('div');
-      div.setAttribute('class', 'card bg-light');
-      cards.appendChild(div);
-      cuttlefish.render(story, div);
-    });
-  });
-}
-
-
-// Observe year selection clicks
-years.forEach(function(year) {
-  year.addEventListener('click', handleYearSelection);
-});
-
-
-// On page load, select the latest year
-updateCards(STORIES_BY_PERSON[LATEST_YEAR]);
-
-
 
 // Initialise beaver to listen for raddecs on the websocket
 function initialiseBeaver(hlcServerUrl) {
@@ -111,10 +62,48 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
       handleEnvironmentalBeacon(raddec);
       break;
     default:
+      initialiseIdStory(raddec);
       updateOccupancy(raddec, isDisappearance );
       updateListZones(raddec, isDisappearance );
       displayDisplacement(raddec,isDisplacement);
   }
+}
+//function linked id to stories
+function initialiseIdStory(raddec){
+  let story = "";
+  let isFuraha = raddec.transmitterId.includes("f24ae6e");
+  let isCamille = raddec.transmitterId.includes("f265d90")
+  if(isFuraha) {
+    story = "https://reelyactive.github.io/beacorcut-demos/stories/furaha/";
+  }
+  else if(isCamille) {
+    story = "https://reelyactive.github.io/beacorcut-demos/stories/camille/";
+  }
+  return story;
+}
+
+// Update the cards to display based on the given story URLs
+function updateCards(story) {
+  let updatedCards = document.createDocumentFragment();
+  let storiesToRetrieve = story.length;
+  let storiesRetrieved = 0;
+
+  while(cards.firstChild) {
+    cards.removeChild(cards.firstChild);
+  }
+
+  story.forEach(function(storyUrl) {
+    cormorant.retrieveStory(storyUrl, function(story) {
+      let isRetrievalComplete = (++storiesRetrieved === storiesToRetrieve);
+      let div = document.createElement('div');
+      div.setAttribute('class', 'card bg-light');
+      updatedCards.appendChild(div);
+      cuttlefish.render(story, div);
+      if(isRetrievalComplete) {
+        cards.appendChild(updatedCards);
+      } 
+    });
+  });
 }
 
 //function is displacement 
@@ -140,7 +129,6 @@ function updateOccupancy(raddec, isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
         presenceArray.push(raddec.transmitterId);
         occupancyCount.textContent = presenceArray.length;
-        console.log(raddec);
       }
     } 
     else {
@@ -174,7 +162,6 @@ function updateListZones(raddec, isDisappearance) {
           if(presenceOfficeInterns.includes(raddec.transmitterId)) {
             presenceOfficeInterns.splice(presenceOfficeInterns.indexOf(raddec.transmitterId), 1);
             occupancyInternCount.textContent = presenceOfficeInterns.length;
-            console.log(raddec.transmitterId);
           }
         }
       }
@@ -235,55 +222,6 @@ function handleEnvironmentalBeacon(raddec) {
   }
 }
 
-// Update each of the graphs in sequence
-function updateGraphs() {
-  console.log("Updating graphs at", new Date().toLocaleTimeString());
-
-  // Hour of Day graph
-  getJson(baseUrl + MINUTE_OF_HOUR_ROUTE, function(response) {
-    if (response) {
-      let minuteofhour = response;
-      const trace1 = {
-        x: minuteofhour.x,
-        y: minuteofhour.y,
-        type: "scatter",
-        market: {
-          opacity: 0.7,
-          color: "rgb(49,130,189)"
-        }
-      };
-      const data = [trace1];
-      const layout = {
-        xaxis: {
-          tickangle: -45
-        }
-      };
-      Plotly.newPlot("linechart", data, layout, { showSendToCloud: true });
-
-      // Zone by Time graph
-      getJson(baseUrl + ZONE_BY_TIME_ROUTE, function(response) {
-        if (response) {
-          let zonebytime = response;
-          var data = [
-            {
-              z: zonebytime.z,
-              x: zonebytime.x,
-              y: zonebytime.y,
-              type: "heatmap"
-            }
-          ];
-          var layout = {
-            xaxis: {
-              tickangle: -45
-            }
-          };
-          Plotly.newPlot("heatmap", data, layout, { showSendToCloud: true});
-         }
-      });
-    }
-  });
-}
-
 // GET the JSON response from the given URL
 function getJson(url, callback) {
   let httpRequest = new XMLHttpRequest();
@@ -314,8 +252,6 @@ function handleConfigAndStart(response) {
   if(response) {
     config = response;
     initialiseBeaver(config.hlcServerUrl);
-    updateGraphs();
-    setInterval(updateGraphs, config.updateGraphsMilliseconds);
   } 
   else {
     console.log("Unable to get config.  Refresh page to try again.");
