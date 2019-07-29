@@ -11,6 +11,7 @@ const HOUR_OF_DAY_ROUTE = BASE_ROUTE + "/hourofday";
 const ZONE_BY_TIME_ROUTE = BASE_ROUTE + "/zonebytime";
 const SEAT_OCCUPANCY_RSSI_THRESHOLD = -75;
 
+
 // DOM elements
 let temperature = document.querySelector("#temperature");
 let humidity = document.querySelector("#humidity");
@@ -29,6 +30,8 @@ let visitorList = ["ac233f24c069"];
 const EARLIEST_YEAR = '2012';
 const LATEST_YEAR = '2019';
 let cards = document.querySelector('#cards');
+let target = document.querySelector('#toRender');
+
 
 
 // Other variables
@@ -41,6 +44,15 @@ let baseUrl =
 let config = null;
 
 // Other initialisation
+//story creation using comrant.js
+let story = '';
+cormorant.retrieveStory("http://localhost:3002/stories/HrrKFKdrUxPWvB8y", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+story = JSON.stringify(story, null, 2);
+});
+console.log(story);
+//cuttlefish.render(story, target);
+
+
 
 // Initialise beaver to listen for raddecs on the websocket
 function initialiseBeaver(hlcServerUrl) {
@@ -74,7 +86,7 @@ function initialiseIdStory(raddec){
   let isFuraha = raddec.transmitterId.includes("f24ae6e");
   let isCamille = raddec.transmitterId.includes("f265d90")
   if(isFuraha) {
-    story = "https://reelyactive.github.io/beacorcut-demos/stories/furaha/";
+    story = "http://localhost:3002/stories/HrrKFKdrUxPWvB8y";
   }
   else if(isCamille) {
     story = "https://reelyactive.github.io/beacorcut-demos/stories/camille/";
