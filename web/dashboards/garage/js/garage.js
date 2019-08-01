@@ -45,11 +45,13 @@ let config = null;
 
 // Other initialisation
 //story creation using comrant.js
-let story = '';
-cormorant.retrieveStory("http://localhost:3002/stories/HrrKFKdrUxPWvB8y", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
-story = JSON.stringify(story, null, 2);
+let storystring = '';
+cormorant.retrieveStory("https://reelyactive.github.io/beacorcut-demos/stories/george/", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+storystring= JSON.stringify(story, null, 2);
+console.log(storystring);
+cuttlefish.render(story, target);
 });
-console.log(story);
+
 //cuttlefish.render(story, target);
 
 
