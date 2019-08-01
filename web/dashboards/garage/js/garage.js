@@ -28,8 +28,6 @@ let internList = ["ac233f24ae6e"];
 let managerList = [];
 let visitorList = ["ac233f24c069"];
 let story = "";
-let targer = document.getElementById("toRender");
-let target
 let cards = document.querySelector('#cards');
 let target = document.querySelector('#toRender');
 
@@ -44,26 +42,18 @@ let baseUrl =
   window.location.port;
 let config = null;
 
-<<<<<<< HEAD
-let storystring = "";
-cormorant.retrieveStory("https://reelyactive.github.io/beacorcut-demos/stories/george/", function(story){ 
-=======
 // Other initialisation
 //story creation using comrant.js
 let storystring = '';
-cormorant.retrieveStory("https://reelyactive.github.io/beacorcut-demos/stories/george/", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
->>>>>>> 3db9d9523980d591515fdb807f6b8ddf61309ab0
+cormorant.retrieveStory("localhost:3000/beacorcut-demos/stories", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
 storystring= JSON.stringify(story, null, 2);
 console.log(storystring);
 cuttlefish.render(story, target);
 });
-<<<<<<< HEAD
-=======
 
 //cuttlefish.render(story, target);
 
 
->>>>>>> 3db9d9523980d591515fdb807f6b8ddf61309ab0
 
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
@@ -92,24 +82,18 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
   }
 }
 //function linked id to stories
-function initialiseIdStory(raddec){
-  let isFuraha = raddec.transmitterId.includes("f24ae6e");
-  let isCamille = raddec.transmitterId.includes("f24c069");
-  if(isFuraha) {
-<<<<<<< HEAD
-    story = "https://reelyactive.github.io/beacorcut-demos/stories/furaha/";
-    target.textContent = story;
-    console.log(story);
-=======
-    story = "http://localhost:3002/stories/HrrKFKdrUxPWvB8y";
->>>>>>> 3db9d9523980d591515fdb807f6b8ddf61309ab0
-  }
-  else if(isCamille) {
-    story = "https://reelyactive.github.io/beacorcut-demos/stories/camille/";
-    target.textContent = story;
-  }
- return story;
-};
+// function initialiseIdStory(raddec){
+//   let isFuraha = raddec.transmitterId.includes("f24ae6e");
+//   let isCamille = raddec.transmitterId.includes("f24c069");
+//   if(isFuraha) {
+//     story = "http://localhost:3002/stories/HrrKFKdrUxPWvB8y";
+//   }
+//   else if(isCamille) {
+//     story = "https://reelyactive.github.io/beacorcut-demos/stories/camille/";
+//     target.textContent = story;
+//   }
+//  return story;
+// };
 
 //function is displacement 
 function displayDisplacement(raddec,isDisplacement) {
@@ -202,6 +186,12 @@ function updateListZones(raddec, isDisappearance) {
       }
     }
   }
+  let storystring = '';
+  cormorant.retrieveStory("localhost:3000/beacorcut-demos/stories/", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+  storystring= JSON.stringify(story, null, 2);
+  console.log(storystring);
+  cuttlefish.render(story, target);
+  });
   return presenceOfficeInterns, presenceOfficeManagers, presenceOfficeVisitors;
 }
 
