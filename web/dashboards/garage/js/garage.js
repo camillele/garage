@@ -26,8 +26,7 @@ let presenceOfficeManagers = [];
 let presenceOfficeVisitors = [];
 let internList = ["ac233f24ae6e"];
 let managerList = [];
-let visitorList = ["ac233f24c069"];
-//let story = "";
+let visitorList = ["ac233f24c069"]
 let cards = document.querySelector('#cards');
 let target = document.querySelector('#toRender');
 
@@ -44,6 +43,7 @@ let config = null;
 
 // Other initialisation
 //story creation using comrant.js
+
 let story = {
   "@context": { "schema": "https://schema.org/" },
   "@graph": [
@@ -58,6 +58,9 @@ let story = {
 cuttlefish.render(story, target);
 cuttlefish.render(story, target);
 cuttlefish.render(story, target);
+
+
+
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
   let socket = io.connect(hlcServerUrl);
@@ -84,6 +87,7 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
       displayDisplacement(raddec,isDisplacement);
   }
 }
+
 //function is displacement 
 function displayDisplacement(raddec,isDisplacement) {
   if (isDisplacement) {
@@ -120,34 +124,31 @@ function updateOccupancy(raddec, isDisappearance) {
 }
 
 
-//function updateDOM (raddec, isDisappearance) {
-  //let isOccupant = raddec.transmitterId.startsWith("ac233fa");
-  //let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
-  //let isReception = raddec.rssiSignature[0].receiverId.includes("0279");
-  //let isLab = raddec.rssiSignature[0].receiverId.includes("0279");
-  //let isIntern = internList.includes(raddec.transmitterId);
-  //let isManager = managerList.includes(raddec.transmitterId);
-  //let isVisitor = visitorList.includes(raddec.transmitterId);
-  //let location = "";
-  //if(isOffice) location = office;
-  //else if (isReception) location = reception;
-  //else location = lab;
-
-  ///if(isOccupant){
-  //  updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location);
-  //}
-
-//}
 
 // List person in the Office
-function updateListZones(raddec, isDisappearance) {
- let isOccupant = raddec.transmitterId.startsWith("ac233");
-   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
+
+function updateDOM (raddec, isDisappearance) {
+  let isOccupant = raddec.transmitterId.startsWith("ac233fa");
+  let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
+  let isReception = raddec.rssiSignature[0].receiverId.includes("0279");
+  let isLab = raddec.rssiSignature[0].receiverId.includes("0279");
   let isIntern = internList.includes(raddec.transmitterId);
   let isManager = managerList.includes(raddec.transmitterId);
-   let isVisitor = visitorList.includes(raddec.transmitterId);
-  if(isOccupant) {
-   if(isOffice) {
+  let isVisitor = visitorList.includes(raddec.transmitterId);
+  let location = "";
+  if(isOffice) location = office;
+  else if (isReception) location = reception;
+  else location = lab;
+
+  if(isOccupant){
+    updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location);
+  }
+
+}
+
+// List person in the Office
+function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location) {
+
     //Display  number of interns for the Office
 
       if(isIntern) {
@@ -194,8 +195,10 @@ function updateListZones(raddec, isDisappearance) {
           }
         }
       }
+
     }
   }
+
 }
 
 
