@@ -16,20 +16,27 @@ const SEAT_OCCUPANCY_RSSI_THRESHOLD = -75;
 let temperature = document.querySelector("#temperature");
 let humidity = document.querySelector("#humidity");
 let occupancyCount = document.getElementById("occupancycount");
-let occupancyManagerCount = document.getElementById("occupancyManagerCount");
-let occupancyVisitorCount = document.getElementById("occupancyVisitorCount");
-let occupancyInternCount = document.getElementById("occupancyInternCount");
 let dateNode = document.getElementById("date");
 let presenceArray = [];
+<<<<<<< HEAD
+let presenceOffice = [];
+let presenceLab = [];
+let presenceReception = [];
+let managerList = ["ac233fa52b8","ac233fa52bc","ac233fa52e8"];
+let internList = ["ac233fa152ac", "ac233fa152b7", "ac233fa152b5", "ac233fa152b1", "ac233fa152b0", "ac233fa152a8"];
+let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152c2", "ac233fa152bb"];
+=======
 let presenceOfficeInterns = [];
 let presenceOfficeManagers = [];
 let presenceOfficeVisitors = [];
 let internList = ["ac233f24ae6e"];
 let managerList = [];
 let visitorList = ["ac233f24c069"]
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 let cards = document.querySelector('#cards');
 let target = document.querySelector('#toRender');
-
+let reception = document.querySelector('#toReception');
+let lab = document.querySelector('#toLab');
 
 
 // Other variables
@@ -43,7 +50,10 @@ let config = null;
 
 // Other initialisation
 //story creation using comrant.js
+<<<<<<< HEAD
+=======
 
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 let story = {
   "@context": { "schema": "https://schema.org/" },
   "@graph": [
@@ -55,11 +65,25 @@ let story = {
     }
   ]
 };
+<<<<<<< HEAD
+let story2 = {
+  "@context": { "schema": "https://schema.org/" },
+  "@graph": [
+    {
+      "@id": "furaha",
+      "@type": "schema:Person",
+      "schema:name": "Furaha",
+      "schema:image": "/dashboards/garage/portrait.1.jpg"
+    }
+  ]
+};
+=======
 cuttlefish.render(story, target);
 cuttlefish.render(story, target);
 cuttlefish.render(story, target);
 
 
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
@@ -81,9 +105,10 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
       handleEnvironmentalBeacon(raddec);
       break;
     default:
-      initialiseIdStory(raddec);
       updateOccupancy(raddec, isDisappearance );
       updateListZones(raddec, isDisappearance );
+<<<<<<< HEAD
+=======
       displayDisplacement(raddec,isDisplacement);
   }
 }
@@ -100,12 +125,13 @@ function displayDisplacement(raddec,isDisplacement) {
     else if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
       idDisplacementVisitor.className = "spinner-grow text-secondary";
     }
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
   }
 }
 
 // Increment/Decrement number of occupants
 function updateOccupancy(raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233f24");
+  let isOccupant = raddec.transmitterId.startsWith("ac233f");
   if(isOccupant) {
     if(!isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
@@ -123,24 +149,39 @@ function updateOccupancy(raddec, isDisappearance) {
   return presenceArray.length;
 }
 
+<<<<<<< HEAD
+//update the office DOM
+function updateListZones(raddec, isDisappearance,location){
+  let isOccupant = raddec.transmitterId.startsWith("ac233");
+=======
 
 
 // List person in the Office
 
 function updateDOM (raddec, isDisappearance) {
   let isOccupant = raddec.transmitterId.startsWith("ac233fa");
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isReception = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isLab = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isIntern = internList.includes(raddec.transmitterId);
-  let isManager = managerList.includes(raddec.transmitterId);
-  let isVisitor = visitorList.includes(raddec.transmitterId);
-  let location = "";
-  if(isOffice) location = office;
-  else if (isReception) location = reception;
-  else location = lab;
-
+  let isReception = raddec.rssiSignature[0].receiverId.includes("08279");
+  let isLab = raddec.rssiSignature[0].receiverId.includes("0f279");
+  let transmitterId = raddec.transmitterId;
+  let isIntern = internList.includes(transmitterId);
+  let isManager = managerList.includes(transmitterId);
+  let isVisitor = visitorList.includes(transmitterId);
   if(isOccupant){
+<<<<<<< HEAD
+    let storyUrl = "https://reelyactive.github.io/beacorcut-demos/stories/" + transmitterId;
+    //cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+    //storystring= JSON.stringify(story, null, 2);
+    //console.log(storystring);
+    //cuttlefish.render(story, dom);
+    //});
+    if(isOffice) {
+      if(!isDisappearance){
+        if(!presenceOffice.includes(transmitterId)){
+          presenceOffice.push(transmitterId);
+          cuttlefish.render(story, target);
+=======
     updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location);
   }
 
@@ -163,38 +204,37 @@ function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,lo
             presenceOfficeInterns.splice(presenceOfficeInterns.indexOf(raddec.transmitterId), 1);
             occupancyInternCount.textContent = presenceOfficeInterns.length;
           }
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
         }
       }
-      //Display number of managers for the office
-      else if(isManager) {
-        if(!isDisappearance) {
-          if(!presenceOfficeManagers.includes(raddec.transmitterId)) {
-            presenceOfficeManagers.push(raddec.transmitterId);
-            occupancyManagerCount.textContent = presenceOfficeManagers.length;
-          }
-        } 
-        else {
-          if(presenceOfficeManagers.includes(raddec.transmitterId)) {
-            presenceOfficeManagers.splice(presenceOfficeManagers.indexOf(raddec.transmitterId), 1);
-            occupancyManagerCount.textContent = presenceOfficeManagers.length;
-          }
-        }
-      } 
-      //Display number of visitors for the office
-      else if(isVisitor) {
-        if(!isDisappearance) {
-          if(!presenceOfficeVisitors.includes(raddec.transmitterId)) {
-            presenceOfficeVisitors.push(raddec.transmitterId);
-            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
-          }
-        } 
-        else {
-          if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
-            presenceOfficeVisitors.splice(presenceOfficeVisitors.indexOf(raddec.transmitterId), 1);
-            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
-          }
-        }
+      else{
+        presenceOffice.splice(presenceOffice.indexOf(transmitterId), 1);
       }
+    }
+    if(isReception) {
+      if(!isDisappearance){
+        if(!presenceReception.includes(transmitterId)){
+          presenceReception.push(transmitterId);
+          cuttlefish.render(story, reception);
+        }
+      }else{
+        presenceReception.splice(presenceReception.indexOf(transmitterId), 1);
+      }
+    }
+    if(isLab) {
+      if(!isDisappearance){
+        if(!presenceLab.includes(transmitterId)){
+          presenceLab.push(transmitterId);
+          cuttlefish.render(story, lab);
+        }
+      }else{
+        presenceLab.splice(presenceLab.indexOf(transmitterId), 1);
+      }
+<<<<<<< HEAD
+    }
+  }
+ }
+=======
 
     }
   }
@@ -203,6 +243,7 @@ function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,lo
 
 
 
+>>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 
 function dispTime() {
   let now = new Date();
