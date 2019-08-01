@@ -45,7 +45,7 @@ let config = null;
 // Other initialisation
 //story creation using comrant.js
 let storystring = '';
-cormorant.retrieveStory("localhost:3000/beacorcut-demos/stories", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+cormorant.retrieveStory("http://localhost:3000/beacorcut-demos/stories/george/", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
 storystring= JSON.stringify(story, null, 2);
 console.log(storystring);
 cuttlefish.render(story, target);
@@ -130,16 +130,37 @@ function updateOccupancy(raddec, isDisappearance) {
   return presenceArray.length;
 }
 
-// List person in the Office
-function updateListZones(raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233");
+
+function updateDOM (raddec, isDisappearance) {
+  let isOccupant = raddec.transmitterId.startsWith("ac233fa");
   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
+  let isReception = raddec.rssiSignature[0].receiverId.includes("0279");
+  let isLab = raddec.rssiSignature[0].receiverId.includes("0279");
   let isIntern = internList.includes(raddec.transmitterId);
   let isManager = managerList.includes(raddec.transmitterId);
   let isVisitor = visitorList.includes(raddec.transmitterId);
-  if(isOccupant) {
-    if(isOffice) {
-      //Display  number of interns for the Office
+  let location = "";
+  if(isOffice) location = office;
+  else if (isReception) location = reception;
+  else location = lab;
+
+  if(isOccupant){
+    updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location);
+  }
+
+}
+
+// List person in the Office
+function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location) {
+  // let isOccupant = raddec.transmitterId.startsWith("ac233");
+  // let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
+  // let isIntern = internList.includes(raddec.transmitterId);
+  // let isManager = managerList.includes(raddec.transmitterId);
+  // let isVisitor = visitorList.includes(raddec.transmitterId);
+  //if(isOccupant) {
+   // if(isOffice) {
+    //Display  number of interns for the Office
+
       if(isIntern) {
         if(!isDisappearance) {
           if(!presenceOfficeInterns.includes(raddec.transmitterId)) {
@@ -184,16 +205,12 @@ function updateListZones(raddec, isDisappearance) {
           }
         }
       }
-    }
-  }
-  let storystring = '';
-  cormorant.retrieveStory("localhost:3000/beacorcut-demos/stories/", function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
-  storystring= JSON.stringify(story, null, 2);
-  console.log(storystring);
-  cuttlefish.render(story, target);
-  });
-  return presenceOfficeInterns, presenceOfficeManagers, presenceOfficeVisitors;
+    //}
+  //}
 }
+
+
+
 
 function dispTime() {
   let now = new Date();
