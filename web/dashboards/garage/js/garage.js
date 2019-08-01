@@ -18,21 +18,12 @@ let humidity = document.querySelector("#humidity");
 let occupancyCount = document.getElementById("occupancycount");
 let dateNode = document.getElementById("date");
 let presenceArray = [];
-<<<<<<< HEAD
 let presenceOffice = [];
 let presenceLab = [];
 let presenceReception = [];
 let managerList = ["ac233fa52b8","ac233fa52bc","ac233fa52e8"];
 let internList = ["ac233fa152ac", "ac233fa152b7", "ac233fa152b5", "ac233fa152b1", "ac233fa152b0", "ac233fa152a8"];
 let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152c2", "ac233fa152bb"];
-=======
-let presenceOfficeInterns = [];
-let presenceOfficeManagers = [];
-let presenceOfficeVisitors = [];
-let internList = ["ac233f24ae6e"];
-let managerList = [];
-let visitorList = ["ac233f24c069"]
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 let cards = document.querySelector('#cards');
 let target = document.querySelector('#toRender');
 let reception = document.querySelector('#toReception');
@@ -50,10 +41,6 @@ let config = null;
 
 // Other initialisation
 //story creation using comrant.js
-<<<<<<< HEAD
-=======
-
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 let story = {
   "@context": { "schema": "https://schema.org/" },
   "@graph": [
@@ -65,7 +52,6 @@ let story = {
     }
   ]
 };
-<<<<<<< HEAD
 let story2 = {
   "@context": { "schema": "https://schema.org/" },
   "@graph": [
@@ -77,13 +63,6 @@ let story2 = {
     }
   ]
 };
-=======
-cuttlefish.render(story, target);
-cuttlefish.render(story, target);
-cuttlefish.render(story, target);
-
-
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
@@ -107,25 +86,6 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
     default:
       updateOccupancy(raddec, isDisappearance );
       updateListZones(raddec, isDisappearance );
-<<<<<<< HEAD
-=======
-      displayDisplacement(raddec,isDisplacement);
-  }
-}
-
-//function is displacement 
-function displayDisplacement(raddec,isDisplacement) {
-  if (isDisplacement) {
-    if(presenceOfficeInterns.includes(raddec.transmitterId)) {
-      idDisplacementIntern.className = "spinner-grow text-danger";
-    }
-    else if(presenceOfficeManagers.includes(raddec.transmitterId)) {
-      idDisplacementManager.className = "spinner-grow text-warning";
-    }
-    else if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
-      idDisplacementVisitor.className = "spinner-grow text-secondary";
-    }
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
   }
 }
 
@@ -149,18 +109,9 @@ function updateOccupancy(raddec, isDisappearance) {
   return presenceArray.length;
 }
 
-<<<<<<< HEAD
 //update the office DOM
 function updateListZones(raddec, isDisappearance,location){
   let isOccupant = raddec.transmitterId.startsWith("ac233");
-=======
-
-
-// List person in the Office
-
-function updateDOM (raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233fa");
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
   let isReception = raddec.rssiSignature[0].receiverId.includes("08279");
   let isLab = raddec.rssiSignature[0].receiverId.includes("0f279");
@@ -169,7 +120,6 @@ function updateDOM (raddec, isDisappearance) {
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
   if(isOccupant){
-<<<<<<< HEAD
     let storyUrl = "https://reelyactive.github.io/beacorcut-demos/stories/" + transmitterId;
     //cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
     //storystring= JSON.stringify(story, null, 2);
@@ -181,30 +131,6 @@ function updateDOM (raddec, isDisappearance) {
         if(!presenceOffice.includes(transmitterId)){
           presenceOffice.push(transmitterId);
           cuttlefish.render(story, target);
-=======
-    updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location);
-  }
-
-}
-
-// List person in the Office
-function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,location) {
-
-    //Display  number of interns for the Office
-
-      if(isIntern) {
-        if(!isDisappearance) {
-          if(!presenceOfficeInterns.includes(raddec.transmitterId)) {
-            presenceOfficeInterns.push(raddec.transmitterId);
-            occupancyInternCount.textContent = presenceOfficeInterns.length;
-          }
-        } 
-        else {
-          if(presenceOfficeInterns.includes(raddec.transmitterId)) {
-            presenceOfficeInterns.splice(presenceOfficeInterns.indexOf(raddec.transmitterId), 1);
-            occupancyInternCount.textContent = presenceOfficeInterns.length;
-          }
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
         }
       }
       else{
@@ -230,20 +156,9 @@ function updateListZones(raddec, isDisappearance,isVisitor,isIntern,isManager,lo
       }else{
         presenceLab.splice(presenceLab.indexOf(transmitterId), 1);
       }
-<<<<<<< HEAD
     }
   }
  }
-=======
-
-    }
-  }
-
-}
-
-
-
->>>>>>> 07daa87ea8db7e2393e6653a2cce6b7d1c3916b2
 
 function dispTime() {
   let now = new Date();
