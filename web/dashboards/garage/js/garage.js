@@ -24,10 +24,11 @@ let presenceOfficeInterns = [];
 let presenceOfficeManagers = [];
 let presenceOfficeVisitors = [];
 let internList = ["ac233f24ae6e"];
-let managerList = ["ac233f265d90"];
+let managerList = [];
 let visitorList = ["ac233f24c069"];
-const EARLIEST_YEAR = '2012';
-const LATEST_YEAR = '2019';
+let story = "";
+let targer = document.getElementById("toRender");
+let target
 let cards = document.querySelector('#cards');
 
 
@@ -40,9 +41,14 @@ let baseUrl =
   window.location.port;
 let config = null;
 
-// Other initialisation
+let storystring = "";
+cormorant.retrieveStory("https://reelyactive.github.io/beacorcut-demos/stories/george/", function(story){ 
+storystring= JSON.stringify(story, null, 2);
+console.log(storystring);
+cuttlefish.render(story, target);
+});
 
-// Initialise beaver to listen for raddecs on the websocket
+// Other initialisation
 function initialiseBeaver(hlcServerUrl) {
   let socket = io.connect(hlcServerUrl);
   beaver.listen(socket, true);
@@ -70,41 +76,19 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
 }
 //function linked id to stories
 function initialiseIdStory(raddec){
-  let story = "";
   let isFuraha = raddec.transmitterId.includes("f24ae6e");
-  let isCamille = raddec.transmitterId.includes("f265d90")
+  let isCamille = raddec.transmitterId.includes("f24c069");
   if(isFuraha) {
     story = "https://reelyactive.github.io/beacorcut-demos/stories/furaha/";
+    target.textContent = story;
+    console.log(story);
   }
   else if(isCamille) {
     story = "https://reelyactive.github.io/beacorcut-demos/stories/camille/";
+    target.textContent = story;
   }
-  return story;
-}
-
-// Update the cards to display based on the given story URLs
-function updateCards(story) {
-  let updatedCards = document.createDocumentFragment();
-  let storiesToRetrieve = story.length;
-  let storiesRetrieved = 0;
-
-  while(cards.firstChild) {
-    cards.removeChild(cards.firstChild);
-  }
-
-  story.forEach(function(storyUrl) {
-    cormorant.retrieveStory(storyUrl, function(story) {
-      let isRetrievalComplete = (++storiesRetrieved === storiesToRetrieve);
-      let div = document.createElement('div');
-      div.setAttribute('class', 'card bg-light');
-      updatedCards.appendChild(div);
-      cuttlefish.render(story, div);
-      if(isRetrievalComplete) {
-        cards.appendChild(updatedCards);
-      } 
-    });
-  });
-}
+ return story;
+};
 
 //function is displacement 
 function displayDisplacement(raddec,isDisplacement) {
@@ -123,7 +107,7 @@ function displayDisplacement(raddec,isDisplacement) {
 
 // Increment/Decrement number of occupants
 function updateOccupancy(raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233");
+  let isOccupant = raddec.transmitterId.startsWith("ac233f24");
   if(isOccupant) {
     if(!isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
