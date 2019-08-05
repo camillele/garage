@@ -63,6 +63,12 @@ let story2 = {
     }
   ]
 };
+    let storyUrl = "http://localhost:3000/api/garage/ac233fa152a51";
+    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
+    storystring= JSON.stringify(story, null, 2);
+    console.log(storystring);
+    cuttlefish.render(story, target);
+    });
 
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
@@ -108,6 +114,17 @@ function updateOccupancy(raddec, isDisappearance) {
   }
   return presenceArray.length;
 }
+function getStory(url, callback) {
+  let httpRequest = new XMLHttpRequest();
+  httpRequest.onreadystatechange = function() {
+    if(httpRequest.readyState === XMLHttpRequest.DONE) {
+      return callback(200, httpRequest.responseText);
+    }
+  };
+  httpRequest.open('GET', url);
+  httpRequest.setRequestHeader('Accept', 'application/json');
+  httpRequest.send();
+}
 
 //update the office DOM
 function updateListZones(raddec, isDisappearance,location){
@@ -120,7 +137,10 @@ function updateListZones(raddec, isDisappearance,location){
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
   if(isOccupant){
-    let storyUrl = "https://reelyactive.github.io/beacorcut-demos/stories/" + transmitterId;
+    getStory("localhost:3000/dashboards/garage/ac233fa152a51", function(data){
+        console.log(data);
+    });
+    //let storyUrl = "http://localhost:3000/dashboards/garage/ac233fa152a51" + transmitterId;
     //cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
     //storystring= JSON.stringify(story, null, 2);
     //console.log(storystring);
