@@ -4,7 +4,7 @@
  */
 
 // Constants
-const BASE_ROUTE = "/api/ericsson";
+const BASE_ROUTE = "/api/garage";
 const CONFIG_ROUTE = BASE_ROUTE + "/config";
 
 // DOM elementsa
@@ -41,36 +41,6 @@ let baseUrl =
   ":" +
   window.location.port;
 let config = null;
-
-//story creation using comrant.js
-let story = {
-  "@context": { "schema": "https://schema.org/" },
-  "@graph": [
-    {
-      "@id": "furaha",
-      "@type": "schema:Person",
-      "schema:name": "Furaha",
-      "schema:image": "/dashboards/garage/portrait.jpg"
-    }
-  ]
-};
-let story2 = {
-  "@context": { "schema": "https://schema.org/" },
-  "@graph": [
-    {
-      "@id": "furaha",
-      "@type": "schema:Person",
-      "schema:name": "Furaha",
-      "schema:image": "/dashboards/garage/portrait.1.jpg"
-    }
-  ]
-};
-    let storyUrl = "http://localhost:3000/api/garage/ac233fa152a51";
-    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
-    storystring= JSON.stringify(story, null, 2);
-    console.log(storystring);
-    cuttlefish.render(story, target);
-    });
 
 // Other initialisation
 function initialiseBeaver(hlcServerUrl) {
@@ -129,41 +99,44 @@ function getStory(url, callback) {
 }
 
 //Main function - update the office DOM
-function updateListZones(raddec, isDisappearance,location){
-  const BODY_CLASS = 'card-body';
+function updateListZones(raddec, isDisappearance){
   let isOccupant = raddec.transmitterId.startsWith("ac233");
   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
   let isReception = raddec.rssiSignature[0].receiverId.includes("027934");
   let isLab = raddec.rssiSignature[0].receiverId.includes("027933");
   let transmitterId = raddec.transmitterId;
+  let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
   let isIntern = internList.includes(transmitterId);
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
   if(isOccupant){
-    getStory("localhost:3000/dashboards/garage/ac233fa152a51", function(data){
-        console.log(data);
-    });
-    //let storyUrl = "http://localhost:3000/dashboards/garage/ac233fa152a51" + transmitterId;
-    //cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
-    //storystring= JSON.stringify(story, null, 2);
-    //console.log(storystring);
-    //cuttlefish.render(story, dom);
-    //});
     if(isOffice) {
       if(!isDisappearance){
         if(!presenceOffice.includes(transmitterId)){
           presenceOffice.push(transmitterId);
           if(isIntern) {
             intern.className = "bg-success";
+        
+            cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
             cuttlefish.render(story, intern);
+            });
+                  
           } 
           else if(isManager) {
             manager.className = "bg-warning";
-            cuttlefish.render(story, manager);
+            //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
+    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
+    cuttlefish.render(story, manager);
+    });
+            //cuttlefish.render(story, manager);
           }
           else if(isVisitor) {
             visitor.className = "bg-primary";
-            cuttlefish.render(story, visitor);
+            //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
+    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
+    cuttlefish.render(story, visitor);
+    });
+            //cuttlefish.render(story, visitor);
           }
         }
       }
