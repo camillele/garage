@@ -6,28 +6,31 @@
 // Constants
 const BASE_ROUTE = "/api/ericsson";
 const CONFIG_ROUTE = BASE_ROUTE + "/config";
-const MINUTE_OF_HOUR_ROUTE = BASE_ROUTE + "/minuteofhour";
-const HOUR_OF_DAY_ROUTE = BASE_ROUTE + "/hourofday";
-const ZONE_BY_TIME_ROUTE = BASE_ROUTE + "/zonebytime";
-const SEAT_OCCUPANCY_RSSI_THRESHOLD = -75;
 
-
-// DOM elements
-let temperature = document.querySelector("#temperature");
+// DOM elementsa
+let temperature = document.querySelector("#temperature")
 let humidity = document.querySelector("#humidity");
 let occupancyCount = document.getElementById("occupancycount");
 let dateNode = document.getElementById("date");
+let presenceLab = [];
 let presenceArray = [];
 let presenceOffice = [];
-let presenceLab = [];
 let presenceReception = [];
-let managerList = ["ac233fa52b8","ac233fa52bc","ac233fa52e8"];
+let managerList = [ "ac233fa152c2", "ac233fa152bb", "ac233fa152a7", "ac233fa152ae", "ac233fa152cc", "ac233fa152a9"];
 let internList = ["ac233fa152ac", "ac233fa152b7", "ac233fa152b5", "ac233fa152b1", "ac233fa152b0", "ac233fa152a8"];
-let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152c2", "ac233fa152bb"];
-let cards = document.querySelector('#cards');
+let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152a6", "ac233fa152b2","ac233fa152b8","ac233fa152bc","ac233fa152e8"];
+let lab = document.querySelector('#toLab');
 let target = document.querySelector('#toRender');
 let reception = document.querySelector('#toReception');
-let lab = document.querySelector('#toLab');
+let visitor = document.querySelector("#visitors");
+let intern = document.querySelector("#interns");
+let manager = document.querySelector("#managers");
+let visitorReception = document.querySelector("#visitorsReception");
+let internReception = document.querySelector("#internsReception");
+let managerReception = document.querySelector("#managersReception");
+let visitorLab = document.querySelector("#visitorsLab");
+let internLab= document.querySelector("#internsLab");
+let managerLab = document.querySelector("#managersLab");
 
 
 // Other variables
@@ -39,7 +42,6 @@ let baseUrl =
   window.location.port;
 let config = null;
 
-// Other initialisation
 //story creation using comrant.js
 let story = {
   "@context": { "schema": "https://schema.org/" },
@@ -84,14 +86,14 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
       handleEnvironmentalBeacon(raddec);
       break;
     default:
-      updateOccupancy(raddec, isDisappearance );
-      updateListZones(raddec, isDisappearance );
+      updateOccupancy(raddec, isDisappearance);
+      updateListZones(raddec, isDisappearance);
   }
 }
 
 // Increment/Decrement number of occupants
 function updateOccupancy(raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233f");
+  let isOccupant = raddec.transmitterId.startsWith("ac233fa");
   if(isOccupant) {
     if(!isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
@@ -109,52 +111,110 @@ function updateOccupancy(raddec, isDisappearance) {
   return presenceArray.length;
 }
 
-//update the office DOM
+//Main function - update the office DOM
 function updateListZones(raddec, isDisappearance,location){
+  const BODY_CLASS = 'card-body';
   let isOccupant = raddec.transmitterId.startsWith("ac233");
   let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isReception = raddec.rssiSignature[0].receiverId.includes("08279");
-  let isLab = raddec.rssiSignature[0].receiverId.includes("0f279");
+  let isReception = raddec.rssiSignature[0].receiverId.includes("027934");
+  let isLab = raddec.rssiSignature[0].receiverId.includes("027933");
   let transmitterId = raddec.transmitterId;
   let isIntern = internList.includes(transmitterId);
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
   if(isOccupant){
     let storyUrl = "https://reelyactive.github.io/beacorcut-demos/stories/" + transmitterId;
-    //cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEURL
-    //storystring= JSON.stringify(story, null, 2);
-    //console.log(storystring);
-    //cuttlefish.render(story, dom);
-    //});
     if(isOffice) {
       if(!isDisappearance){
         if(!presenceOffice.includes(transmitterId)){
           presenceOffice.push(transmitterId);
-          cuttlefish.render(story, target);
+          if(isIntern) {
+            intern.className = "bg-success";
+            cuttlefish.render(story, intern);
+          } 
+          else if(isManager) {
+            manager.className = "bg-warning";
+            cuttlefish.render(story, manager);
+          }
+          else if(isVisitor) {
+            visitor.className = "bg-primary";
+            cuttlefish.render(story, visitor);
+          }
         }
       }
       else{
         presenceOffice.splice(presenceOffice.indexOf(transmitterId), 1);
+        if(isIntern) {
+          intern.removeChild(intern.childNodes[0]); 
+        } 
+        else if(isManager) {
+          manager.removeChild(manager.childNodes[0]);   
+        }
+        else if(isVisitor) {
+          visitor.removeChild(visitor.childNodes[0]);   
+        }
       }
     }
     if(isReception) {
       if(!isDisappearance){
         if(!presenceReception.includes(transmitterId)){
           presenceReception.push(transmitterId);
-          cuttlefish.render(story, reception);
+          if(isIntern) {
+            internReception.className = "bg-success";
+            cuttlefish.render(story, internReception);
+          } 
+          else if(isManager) {
+            managerReception.className = "bg-warning";
+            cuttlefish.render(story, managerReception);
+          }
+          else if(isVisitor) {
+            visitorReception.className = "bg-primary";
+            cuttlefish.render(story, visitorReception);
+          }
         }
-      }else{
+      }
+      else {
         presenceReception.splice(presenceReception.indexOf(transmitterId), 1);
+        if(isIntern) {
+          internReception.removeChild(internReception.childNodes[0]); 
+        } 
+        else if(isManager) {
+          managerRception.removeChild(managerReception.childNodes[0]);  
+        }
+        else if(isVisitor) {
+          visitorReception.removeChild(visitorReception.childNodes[0]);   
+        }
       }
     }
     if(isLab) {
       if(!isDisappearance){
         if(!presenceLab.includes(transmitterId)){
           presenceLab.push(transmitterId);
-          cuttlefish.render(story, lab);
+          if(isIntern) {
+            internLab.className = "bg-success";
+            cuttlefish.render(story, internLab);
+          } 
+          else if(isManager) {
+            managerLab.className = "bg-warning";
+            cuttlefish.render(story, managerLab);
+          }
+          else if(isVisitor) {
+            visitorLab.className = "bg-primary";
+            cuttlefish.render(story, visitorLab);
+          }
         }
-      }else{
+      }
+      else{
         presenceLab.splice(presenceLab.indexOf(transmitterId), 1);
+        if(isIntern) {
+          internLab.removeChild(internLab.childNodes[0]); 
+        } 
+        else if(isManager) {
+          managerLab.removeChild(managerLab.childNodes[0]);  
+        }
+        else if(isVisitor) {
+          visitorLab.removeChild(visitorLab.childNodes[0]);   
+        }
       }
     }
   }

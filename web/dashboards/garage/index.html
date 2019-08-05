@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
-          content="Tableau de bord pour abribus par reelyActive.">
+          content="Demo for garage by reelyActive.">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../style/bootstrap.min.css">
     <link rel="stylesheet" href="../../style/reelyactive.css">
@@ -98,7 +98,7 @@
     <div class="container-fluid">
       <div class="row justify-content-center">
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-9">
-          <h1 class="mt-4">Garage -Ericsson</h1>
+          <h1 class="mt-4">Garage - Ericsson</h1>
           <!-- First row real-time Dashboard-->
           <div class="row">
             <!--Time Card-->
@@ -142,13 +142,17 @@
           <div class="card-deck mt-4">
             <!--Office card-->
             <div class="card text-white bg-dark mb-3">
-              <img class="card-img-top" src="../../images/office.png" alt="Card image cap">
+              <img class="card-img-top" src="../../images/garage-office.png" alt="Card image cap">
               <div class="card-img-overlay">
-                <h2 class="card-title text-white"><i class="fas fa-clock"></i> Office</h2> 
+                <h2 class="card-title text-white"><i class="fas fa-mail-bulk"></i> Office</h2> 
               </div>
               <div class="card-body">
                 <h3 class="card-text text-center mt-4">
-                  <div class="card-columns" id="toRender"></div>
+                  <div class="card-columns">
+                    <div class="card-columns" id="interns"></div>
+                    <div class="card-columns" id="managers"></div>
+                    <div class="card-columns" id="visitors"></div>
+                </div>
                 </h3>
               </div>
             </div>
@@ -160,7 +164,11 @@
               </div>
               <div class="card-body">
                 <h3 class="card-text text-center mt-4">
-                  <div class="card-columns" id="toReception"></div>
+                  <div class="card-columns">
+                    <div class="card-columns" id="internsReception"></div>
+                    <div class="card-columns" id="managersReception"></div>
+                    <div class="card-columns" id="visitorsReception"></div>
+                  </div>
                 </h3>
               </div>
             </div>
@@ -172,7 +180,11 @@
               </div>
               <div class="card-body">
                 <h3 class="card-text text-center mt-4">
-                  <div class="card-columns" id="toLab"></div>
+                  <div class="card-columns">
+                    <div class="card-columns" id="internsLab"></div>
+                    <div class="card-columns" id="managersLab"></div>
+                    <div class="card-columns" id="visitorsLab"></div>
+                  </div>
                 </h3>
               </div>
             </div>
