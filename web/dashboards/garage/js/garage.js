@@ -117,26 +117,23 @@ function updateListZones(raddec, isDisappearance){
           if(isIntern) {
             intern.className = "bg-success";
         
-            cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
+            cormorant.retrieveStory(storyUrl, function(story){ 
             cuttlefish.render(story, intern);
-            });
-                  
+            });      
           } 
           else if(isManager) {
             manager.className = "bg-warning";
             //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
-    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
-    cuttlefish.render(story, manager);
-    });
-            //cuttlefish.render(story, manager);
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, manager);
+            });
           }
           else if(isVisitor) {
             visitor.className = "bg-primary";
             //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
-    cormorant.retrieveStory(storyUrl, function(story){ //USE A PROPER STORY URL INSTEAD OF BASEUR
-    cuttlefish.render(story, visitor);
-    });
-            //cuttlefish.render(story, visitor);
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, visitor);
+            });
           }
         }
       }
@@ -159,15 +156,21 @@ function updateListZones(raddec, isDisappearance){
           presenceReception.push(transmitterId);
           if(isIntern) {
             internReception.className = "bg-success";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, internReception);
+            });
           } 
           else if(isManager) {
             managerReception.className = "bg-warning";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, managerReception);
+            });
           }
           else if(isVisitor) {
             visitorReception.className = "bg-primary";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, visitorReception);
+            });
           }
         }
       }
@@ -190,15 +193,21 @@ function updateListZones(raddec, isDisappearance){
           presenceLab.push(transmitterId);
           if(isIntern) {
             internLab.className = "bg-success";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, internLab);
+            });
           } 
           else if(isManager) {
             managerLab.className = "bg-warning";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, managerLab);
+            });
           }
           else if(isVisitor) {
             visitorLab.className = "bg-primary";
+            cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, visitorLab);
+            });
           }
         }
       }
