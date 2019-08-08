@@ -31,6 +31,7 @@ let managerReception = document.querySelector("#managersReception");
 let visitorLab = document.querySelector("#visitorsLab");
 let internLab= document.querySelector("#internsLab");
 let managerLab = document.querySelector("#managersLab");
+
 let officeSensors = [];
 let receptionSensors = [];
 let labSensors = [];
