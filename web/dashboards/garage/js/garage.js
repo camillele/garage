@@ -31,6 +31,9 @@ let managerReception = document.querySelector("#managersReception");
 let visitorLab = document.querySelector("#visitorsLab");
 let internLab= document.querySelector("#internsLab");
 let managerLab = document.querySelector("#managersLab");
+let officeSensors = [];
+let receptionSensors = [];
+let labSensors = [];
 
 
 // Other variables
@@ -96,6 +99,20 @@ function getStory(url, callback) {
   httpRequest.open('GET', url);
   httpRequest.setRequestHeader('Accept', 'application/json');
   httpRequest.send();
+}
+/**
+ * 
+ * @param {*} list list of sensors in a particular area
+ * @param {*} raddec 
+ * @param {boolean} isDisappearance 
+ */
+function checkSensor(list, raddec, isDisappearance){
+  for(const id of list){
+    if(raddec.rssiSignature[0].receiverId.includes(id)){
+      return true;
+    }
+  }
+  return false;
 }
 
 //Main function - update the office DOM
