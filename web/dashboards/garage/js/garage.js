@@ -36,9 +36,9 @@ let officeSensors = [];
 let receptionSensors = [];
 let labSensors = [];
 
-let story = cormorant.retrieveStory("http://localhost:3001/stories/tVspl7r2J1QYpCrd",function(story){
-console.log(story);
-});
+//let story = cormorant.retrieveStory("http://localhost:3001/stories/tVspl7r2J1QYpCrd",function(story){
+//console.log(story);
+//});
 // Other variables
 let baseUrl =
   window.location.protocol +
@@ -126,6 +126,9 @@ function updateListZones(raddec, isDisappearance){
   let isLab = raddec.rssiSignature[0].receiverId.includes("027933");
   let transmitterId = raddec.transmitterId;
   let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
+  //TO-DO: these two variables will be used once cormorant CORS issues are resolved
+  //let storyId = "http://localhost:3000/api/garage/" + `${transmitterId}`; 
+  //let storyUrl = "http://localhost:3000/stories" + `${storyId}`;
   let isIntern = internList.includes(transmitterId);
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
@@ -136,21 +139,18 @@ function updateListZones(raddec, isDisappearance){
           presenceOffice.push(transmitterId);
           if(isIntern) {
             intern.className = "bg-success";
-        
             cormorant.retrieveStory(storyUrl, function(story){ 
             cuttlefish.render(story, intern);
             });      
           } 
           else if(isManager) {
             manager.className = "bg-warning";
-            //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
             cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, manager);
             });
           }
           else if(isVisitor) {
             visitor.className = "bg-primary";
-            //let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
             cormorant.retrieveStory(storyUrl, function(story){
             cuttlefish.render(story, visitor);
             });
@@ -268,7 +268,6 @@ function handleEnvironmentalBeacon(raddec) {
     temperature.textContent = t.toFixed(1);
   }
 }
-
 // GET the JSON response from the given URL
 function getJson(url, callback) {
   let httpRequest = new XMLHttpRequest();
