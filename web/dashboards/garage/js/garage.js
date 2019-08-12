@@ -126,6 +126,7 @@ function updateListZones(raddec, isDisappearance){
   let isLab = raddec.rssiSignature[0].receiverId.includes("027933");
   let transmitterId = raddec.transmitterId;
   let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
+  
   //TO-DO: these two variables will be used once cormorant CORS issues are resolved
   //let storyId = "http://localhost:3000/api/garage/" + `${transmitterId}`; 
   //let storyUrl = "http://localhost:3000/stories" + `${storyId}`;
