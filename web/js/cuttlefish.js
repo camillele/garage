@@ -28,7 +28,6 @@ let cuttlefish = (function() {
       node.removeChild(node.firstChild);
     }
   }
-
   // Render the image
   function renderImage(element, node) {
     if(element.hasOwnProperty("schema:image")) {
