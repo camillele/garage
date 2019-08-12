@@ -32,6 +32,7 @@ let visitorLab = document.querySelector("#visitorsLab");
 let internLab= document.querySelector("#internsLab");
 let managerLab = document.querySelector("#managersLab");
 
+//garage receivers
 let officeSensors = ["001bc5094081017a","001bc5094081017b","001bc50940810175", "001bc50940810174"];
 let receptionSensors = ["001bc50940810176","001bc5094081017d","001bc5094081017d","001bc50940810181"];
 let labSensors = ["001bc5094081017f","001bc50940810180","001bc5094081017e","001bc50940810177"];
