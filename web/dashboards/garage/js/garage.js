@@ -36,7 +36,9 @@ let officeSensors = [];
 let receptionSensors = [];
 let labSensors = [];
 
-
+let story = cormorant.retrieveStory("http://localhost:3001/stories/tVspl7r2J1QYpCrd",function(story){
+console.log(story);
+});
 // Other variables
 let baseUrl =
   window.location.protocol +
