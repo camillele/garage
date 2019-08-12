@@ -32,9 +32,9 @@ let visitorLab = document.querySelector("#visitorsLab");
 let internLab= document.querySelector("#internsLab");
 let managerLab = document.querySelector("#managersLab");
 
-let officeSensors = [];
-let receptionSensors = [];
-let labSensors = [];
+let officeSensors = ["001bc5094081017a","001bc5094081017b","001bc50940810175", "001bc50940810174"];
+let receptionSensors = ["001bc50940810176","001bc5094081017d","001bc5094081017d","001bc50940810181"];
+let labSensors = ["001bc5094081017f","001bc50940810180","001bc5094081017e","001bc50940810177"];
 
 // Other variables
 let baseUrl =
@@ -118,9 +118,9 @@ function checkSensor(list, raddec, isDisappearance){
 //Main function - update the office DOM
 function updateListZones(raddec, isDisappearance){
   let isOccupant = raddec.transmitterId.startsWith("ac233");
-  let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isReception = raddec.rssiSignature[0].receiverId.includes("027934");
-  let isLab = raddec.rssiSignature[0].receiverId.includes("027933");
+  let isOffice =  officeSensors.includes(raddec.rssiSignature[0].receiverId);
+  let isReception = receptionSensors.includes(raddec.rssiSignature[0].receiverId);
+  let isLab = labSensors.includes(raddec.rssiSignature[0].receiverId);
   let transmitterId = raddec.transmitterId;
   let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
 
