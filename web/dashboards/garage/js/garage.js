@@ -19,9 +19,10 @@ let presenceReception = [];
 let managerList = [ "ac233fa152c2", "ac233fa152bb", "ac233fa152a7", "ac233fa152ae", "ac233fa152cc", "ac233fa152a9"];
 let internList = ["ac233fa152ac", "ac233fa152b7", "ac233fa152b5", "ac233fa152b1", "ac233fa152b0", "ac233fa152a8"];
 let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152a6", "ac233fa152b2","ac233fa152b8","ac233fa152bc","ac233fa152e8"];
-let lab = document.querySelector('#toLab');
-let target = document.querySelector('#toRender');
-let reception = document.querySelector('#toReception');
+let lab = document.querySelector('#lab');
+let office = document.querySelector('#office');
+let reception = document.querySelector('#reception');
+
 let visitor = document.querySelector("#visitors");
 let intern = document.querySelector("#interns");
 let manager = document.querySelector("#managers");
@@ -36,6 +37,26 @@ let managerLab = document.querySelector("#managersLab");
 let officeSensors = ["001bc5094081017a","001bc5094081017b","001bc50940810175", "001bc50940810174"];
 let receptionSensors = ["001bc50940810176","001bc5094081017d","001bc5094081017d","001bc50940810181"];
 let labSensors = ["001bc5094081017f","001bc50940810180","001bc5094081017e","001bc50940810177"];
+
+let storyMap = {
+      "ac233fa152c2": "WyIYIpvM9rW6n5KP",
+      "ac233fa152bb": "RYfwSkdZQE1VzEwJ",
+      "ac233fa152a7": "9DplG9LSM3HzCciU",
+      "ac233fa152ae": "YrHt5DXkhtUO2n3Y",
+      "ac233fa152cc": "x5MvvtbMpE7l7Bmh",
+      "ac233fa152a9": "qgU2ZnJ2ufy5pAXF",
+      "ac233fa152ac": "Kx0fvewhudkItxUX",
+      "ac233fa152b7": "WyIYIpvM9rW6n5KP",
+      "ac233fa152b5":"RYfwSkdZQE1VzEwJ",
+      "ac233fa152b1": "YrHt5DXkhtUO2n3Y",
+      "ac233fa152b0": "x5MvvtbMpE7l7Bmh",
+      "ac233fa152a8": "qgU2ZnJ2ufy5pAXF",
+      "ac233fa152a5": "EA8RoYN3q3QdDWSD",
+      "ac233fa152aa": "oE5OsHplG3wW1BRo",
+      "ac233fa152ba": "EA8RoYN3q3QdDWSD",
+      "ac233fa152a6":"E5OsHplG3wW1BRo",
+      "ac233fa152b8": "WyIYIpvM9rW6n5KP"
+    };
 
 // Other variables
 let baseUrl =
@@ -88,6 +109,7 @@ function updateOccupancy(raddec, isDisappearance) {
       }
     }
   }
+
   return presenceArray.length;
 }
 function getStory(url, callback) {
@@ -119,15 +141,14 @@ function checkSensor(list, raddec, isDisappearance){
 //Main function - update the office DOM
 function updateListZones(raddec, isDisappearance){
   let isOccupant = raddec.transmitterId.startsWith("ac233");
-  let isOffice =  officeSensors.includes(raddec.rssiSignature[0].receiverId);
+  let isOffice = officeSensors.includes(raddec.rssiSignature[0].receiverId);
   let isReception = receptionSensors.includes(raddec.rssiSignature[0].receiverId);
   let isLab = labSensors.includes(raddec.rssiSignature[0].receiverId);
   let transmitterId = raddec.transmitterId;
-  let storyUrl = "http://localhost:3000/api/garage/" + `${transmitterId}`;
 
-  //TO-DO: these two variables will be used once cormorant CORS issues are resolved
-  //let storyId = "http://localhost:3000/api/garage/" + `${transmitterId}`; 
-  //let storyUrl = "http://localhost:3000/stories" + `${storyId}`;
+  let storyId = storyMap[transmitterId]; 
+ let storyUrl = "http://localhost:3001/stories/" + storyId;
+
   let isIntern = internList.includes(transmitterId);
   let isManager = managerList.includes(transmitterId);
   let isVisitor = visitorList.includes(transmitterId);
@@ -139,6 +160,7 @@ function updateListZones(raddec, isDisappearance){
           if(isIntern) {
             intern.className = "bg-success";
             cormorant.retrieveStory(storyUrl, function(story){ 
+		
             cuttlefish.render(story, intern);
             });      
           } 
@@ -303,6 +325,17 @@ function handleConfigAndStart(response) {
   }
 }
 
+//refresh occupancy divs
+ let count = 0;
+ function refresh(){
+  office.html(count);
+  raception.html(count);
+  lab.html(count);
+  count ++
+  setTimeout(refresh, 1000);
+ }
+
 // The following code runs on startup...
 getJson(baseUrl + CONFIG_ROUTE, handleConfigAndStart);
 setInterval(updateClock, 1000);
+refresh();e
