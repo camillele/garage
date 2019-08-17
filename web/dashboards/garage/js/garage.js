@@ -112,17 +112,7 @@ function updateOccupancy(raddec, isDisappearance) {
 
   return presenceArray.length;
 }
-function getStory(url, callback) {
-  let httpRequest = new XMLHttpRequest();
-  httpRequest.onreadystatechange = function() {
-    if(httpRequest.readyState === XMLHttpRequest.DONE) {
-      return callback(200, httpRequest.responseText);
-    }
-  };
-  httpRequest.open('GET', url);
-  httpRequest.setRequestHeader('Accept', 'application/json');
-  httpRequest.send();
-}
+
 /**
  * 
  * @param {*} list list of sensors in a particular area
