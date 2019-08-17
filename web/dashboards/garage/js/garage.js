@@ -4,32 +4,59 @@
  */
 
 // Constants
-const BASE_ROUTE = "/api/abribus";
+const BASE_ROUTE = "/api/garage";
 const CONFIG_ROUTE = BASE_ROUTE + "/config";
-const MINUTE_OF_HOUR_ROUTE = BASE_ROUTE + "/minuteofhour";
-const HOUR_OF_DAY_ROUTE = BASE_ROUTE + "/hourofday";
-const ZONE_BY_TIME_ROUTE = BASE_ROUTE + "/zonebytime";
-const SEAT_OCCUPANCY_RSSI_THRESHOLD = -75;
 
-// DOM elements
-let temperature = document.querySelector("#temperature");
+// DOM elementsa
+let temperature = document.querySelector("#temperature")
 let humidity = document.querySelector("#humidity");
 let occupancyCount = document.getElementById("occupancycount");
-let occupancyManagerCount = document.getElementById("occupancyManagerCount");
-let occupancyVisitorCount = document.getElementById("occupancyVisitorCount");
-let occupancyInternCount = document.getElementById("occupancyInternCount");
 let dateNode = document.getElementById("date");
+let presenceLab = [];
 let presenceArray = [];
-let presenceOfficeInterns = [];
-let presenceOfficeManagers = [];
-let presenceOfficeVisitors = [];
-let internList = ["ac233f24ae6e"];
-let managerList = ["ac233f265d90"];
-let visitorList = ["ac233f24c069"];
-const EARLIEST_YEAR = '2012';
-const LATEST_YEAR = '2019';
-let years = document.querySelectorAll('.year');
-let cards = document.querySelector('#cards');
+let presenceOffice = [];
+let presenceReception = [];
+let managerList = [ "ac233fa152c2", "ac233fa152bb", "ac233fa152a7", "ac233fa152ae", "ac233fa152cc", "ac233fa152a9"];
+let internList = ["ac233fa152ac", "ac233fa152b7", "ac233fa152b5", "ac233fa152b1", "ac233fa152b0", "ac233fa152a8"];
+let visitorList = ["ac233fa152a5", "ac233fa152aa", "ac233fa152bd", "ac233fa152ba", "ac233fa152a6", "ac233fa152b2","ac233fa152b8","ac233fa152bc","ac233fa152e8"];
+let lab = document.querySelector('#lab');
+let office = document.querySelector('#office');
+let reception = document.querySelector('#reception');
+
+let visitor = document.querySelector("#visitors");
+let intern = document.querySelector("#interns");
+let manager = document.querySelector("#managers");
+let visitorReception = document.querySelector("#visitorsReception");
+let internReception = document.querySelector("#internsReception");
+let managerReception = document.querySelector("#managersReception");
+let visitorLab = document.querySelector("#visitorsLab");
+let internLab= document.querySelector("#internsLab");
+let managerLab = document.querySelector("#managersLab");
+
+//garage receivers
+let officeSensors = ["001bc5094081017a","001bc5094081017b","001bc50940810175", "001bc50940810174"];
+let receptionSensors = ["001bc50940810176","001bc5094081017d","001bc5094081017d","001bc50940810181"];
+let labSensors = ["001bc5094081017f","001bc50940810180","001bc5094081017e","001bc50940810177"];
+
+let storyMap = {
+      "ac233fa152c2": "WyIYIpvM9rW6n5KP",
+      "ac233fa152bb": "RYfwSkdZQE1VzEwJ",
+      "ac233fa152a7": "9DplG9LSM3HzCciU",
+      "ac233fa152ae": "YrHt5DXkhtUO2n3Y",
+      "ac233fa152cc": "x5MvvtbMpE7l7Bmh",
+      "ac233fa152a9": "qgU2ZnJ2ufy5pAXF",
+      "ac233fa152ac": "Kx0fvewhudkItxUX",
+      "ac233fa152b7": "WyIYIpvM9rW6n5KP",
+      "ac233fa152b5":"RYfwSkdZQE1VzEwJ",
+      "ac233fa152b1": "YrHt5DXkhtUO2n3Y",
+      "ac233fa152b0": "x5MvvtbMpE7l7Bmh",
+      "ac233fa152a8": "qgU2ZnJ2ufy5pAXF",
+      "ac233fa152a5": "EA8RoYN3q3QdDWSD",
+      "ac233fa152aa": "oE5OsHplG3wW1BRo",
+      "ac233fa152ba": "EA8RoYN3q3QdDWSD",
+      "ac233fa152a6":"E5OsHplG3wW1BRo",
+      "ac233fa152b8": "WyIYIpvM9rW6n5KP"
+    };
 
 // Other variables
 let baseUrl =
@@ -41,57 +68,6 @@ let baseUrl =
 let config = null;
 
 // Other initialisation
-
-const STORIES_BY_PERSON = {
-  "2019": [
-    "https://reelyactive.github.io/beacorcut-demos/stories/camille/",
-    "https://reelyactive.github.io/beacorcut-demos/stories/furaha/"
-  ]
-};
-// Update the year
-function handleYearSelection(event) {
-  let selectedYear = this;  // currentTarget of event
-  let selectedYearId = selectedYear.getAttribute('id');
-
-  years.forEach(function(year) {
-    year.setAttribute('class', 'page-item year');
-  });
-  selectedYear.setAttribute('class', 'page-item year active');
-
-  let selectedYearStoryUrls = STORIES_BY_PERSON[selectedYearId];
-  updateCards(selectedYearStoryUrls);
-}
-
-
-// Update the cards to display based on the given story URLs
-function updateCards(storyUrls) {
-  while(cards.firstChild) {
-    cards.removeChild(cards.firstChild);
-  }
-
-  storyUrls.forEach(function(storyUrl) {
-    cormorant.retrieveStory(storyUrl, function(story) {
-      let div = document.createElement('div');
-      div.setAttribute('class', 'card bg-light');
-      cards.appendChild(div);
-      cuttlefish.render(story, div);
-    });
-  });
-}
-
-
-// Observe year selection clicks
-years.forEach(function(year) {
-  year.addEventListener('click', handleYearSelection);
-});
-
-
-// On page load, select the latest year
-updateCards(STORIES_BY_PERSON[LATEST_YEAR]);
-
-
-
-// Initialise beaver to listen for raddecs on the websocket
 function initialiseBeaver(hlcServerUrl) {
   let socket = io.connect(hlcServerUrl);
   beaver.listen(socket, true);
@@ -111,36 +87,19 @@ function handleRaddec(raddec, isDisappearance, isDisplacement) {
       handleEnvironmentalBeacon(raddec);
       break;
     default:
-      updateOccupancy(raddec, isDisappearance );
-      updateListZones(raddec, isDisappearance );
-      displayDisplacement(raddec,isDisplacement);
-  }
-}
-
-//function is displacement 
-function displayDisplacement(raddec,isDisplacement) {
-  if (isDisplacement) {
-    if(presenceOfficeInterns.includes(raddec.transmitterId)) {
-      idDisplacementIntern.className = "spinner-grow text-danger";
-    }
-    else if(presenceOfficeManagers.includes(raddec.transmitterId)) {
-      idDisplacementManager.className = "spinner-grow text-warning";
-    }
-    else if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
-      idDisplacementVisitor.className = "spinner-grow text-secondary";
-    }
+      updateOccupancy(raddec, isDisappearance);
+      updateListZones(raddec, isDisappearance);
   }
 }
 
 // Increment/Decrement number of occupants
 function updateOccupancy(raddec, isDisappearance) {
-  let isOccupant = raddec.transmitterId.startsWith("ac233");
+  let isOccupant = raddec.transmitterId.startsWith("ac233fa");
   if(isOccupant) {
     if(!isDisappearance) {
       if(!presenceArray.includes(raddec.transmitterId)) {
         presenceArray.push(raddec.transmitterId);
         occupancyCount.textContent = presenceArray.length;
-        console.log(raddec);
       }
     } 
     else {
@@ -150,68 +109,154 @@ function updateOccupancy(raddec, isDisappearance) {
       }
     }
   }
+
   return presenceArray.length;
 }
 
-// List person in the Office
-function updateListZones(raddec, isDisappearance) {
+/**
+ * 
+ * @param {*} list list of sensors in a particular area
+ * @param {*} raddec 
+ * @param {boolean} isDisappearance 
+ */
+function checkSensor(list, raddec, isDisappearance){
+  for(const id of list){
+    if(raddec.rssiSignature[0].receiverId.includes(id)){
+      return true;
+    }
+  }
+  return false;
+}
+
+//Main function - update the office DOM
+function updateListZones(raddec, isDisappearance){
   let isOccupant = raddec.transmitterId.startsWith("ac233");
-  let isOffice = raddec.rssiSignature[0].receiverId.includes("0279");
-  let isIntern = internList.includes(raddec.transmitterId);
-  let isManager = managerList.includes(raddec.transmitterId);
-  let isVisitor = visitorList.includes(raddec.transmitterId);
-  if(isOccupant) {
+  let isOffice = officeSensors.includes(raddec.rssiSignature[0].receiverId);
+  let isReception = receptionSensors.includes(raddec.rssiSignature[0].receiverId);
+  let isLab = labSensors.includes(raddec.rssiSignature[0].receiverId);
+  let transmitterId = raddec.transmitterId;
+
+  let storyId = storyMap[transmitterId]; 
+ let storyUrl = "http://localhost:3001/stories/" + storyId;
+
+  let isIntern = internList.includes(transmitterId);
+  let isManager = managerList.includes(transmitterId);
+  let isVisitor = visitorList.includes(transmitterId);
+  if(isOccupant){
     if(isOffice) {
-      //Display  number of interns for the Office
-      if(isIntern) {
-        if(!isDisappearance) {
-          if(!presenceOfficeInterns.includes(raddec.transmitterId)) {
-            presenceOfficeInterns.push(raddec.transmitterId);
-            occupancyInternCount.textContent = presenceOfficeInterns.length;
+      if(!isDisappearance){
+        if(!presenceOffice.includes(transmitterId)){
+          presenceOffice.push(transmitterId);
+          if(isIntern) {
+            intern.className = "bg-success";
+            cormorant.retrieveStory(storyUrl, function(story){ 
+		
+            cuttlefish.render(story, intern);
+            });      
+          } 
+          else if(isManager) {
+            manager.className = "bg-warning";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, manager);
+            });
           }
-        } 
-        else {
-          if(presenceOfficeInterns.includes(raddec.transmitterId)) {
-            presenceOfficeInterns.splice(presenceOfficeInterns.indexOf(raddec.transmitterId), 1);
-            occupancyInternCount.textContent = presenceOfficeInterns.length;
-            console.log(raddec.transmitterId);
+          else if(isVisitor) {
+            visitor.className = "bg-primary";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, visitor);
+            });
           }
         }
       }
-      //Display number of managers for the office
-      else if(isManager) {
-        if(!isDisappearance) {
-          if(!presenceOfficeManagers.includes(raddec.transmitterId)) {
-            presenceOfficeManagers.push(raddec.transmitterId);
-            occupancyManagerCount.textContent = presenceOfficeManagers.length;
-          }
+      else{
+        presenceOffice.splice(presenceOffice.indexOf(transmitterId), 1);
+        if(isIntern) {
+          intern.removeChild(intern.childNodes[0]); 
         } 
-        else {
-          if(presenceOfficeManagers.includes(raddec.transmitterId)) {
-            presenceOfficeManagers.splice(presenceOfficeManagers.indexOf(raddec.transmitterId), 1);
-            occupancyManagerCount.textContent = presenceOfficeManagers.length;
+        else if(isManager) {
+          manager.removeChild(manager.childNodes[0]);   
+        }
+        else if(isVisitor) {
+          visitor.removeChild(visitor.childNodes[0]);   
+        }
+      }
+    }
+    if(isReception) {
+      if(!isDisappearance){
+        if(!presenceReception.includes(transmitterId)){
+          presenceReception.push(transmitterId);
+          if(isIntern) {
+            internReception.className = "bg-success";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, internReception);
+            });
+          } 
+          else if(isManager) {
+            managerReception.className = "bg-warning";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, managerReception);
+            });
+          }
+          else if(isVisitor) {
+            visitorReception.className = "bg-primary";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, visitorReception);
+            });
           }
         }
-      } 
-      //Display number of visitors for the office
-      else if(isVisitor) {
-        if(!isDisappearance) {
-          if(!presenceOfficeVisitors.includes(raddec.transmitterId)) {
-            presenceOfficeVisitors.push(raddec.transmitterId);
-            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
-          }
+      }
+      else {
+        presenceReception.splice(presenceReception.indexOf(transmitterId), 1);
+        if(isIntern) {
+          internReception.removeChild(internReception.childNodes[0]); 
         } 
-        else {
-          if(presenceOfficeVisitors.includes(raddec.transmitterId)) {
-            presenceOfficeVisitors.splice(presenceOfficeVisitors.indexOf(raddec.transmitterId), 1);
-            occupancyVisitorCount.textContent = presenceOfficeVisitors.length;
+        else if(isManager) {
+          managerRception.removeChild(managerReception.childNodes[0]);  
+        }
+        else if(isVisitor) {
+          visitorReception.removeChild(visitorReception.childNodes[0]);   
+        }
+      }
+    }
+    if(isLab) {
+      if(!isDisappearance){
+        if(!presenceLab.includes(transmitterId)){
+          presenceLab.push(transmitterId);
+          if(isIntern) {
+            internLab.className = "bg-success";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, internLab);
+            });
+          } 
+          else if(isManager) {
+            managerLab.className = "bg-warning";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, managerLab);
+            });
           }
+          else if(isVisitor) {
+            visitorLab.className = "bg-primary";
+            cormorant.retrieveStory(storyUrl, function(story){
+            cuttlefish.render(story, visitorLab);
+            });
+          }
+        }
+      }
+      else{
+        presenceLab.splice(presenceLab.indexOf(transmitterId), 1);
+        if(isIntern) {
+          internLab.removeChild(internLab.childNodes[0]); 
+        } 
+        else if(isManager) {
+          managerLab.removeChild(managerLab.childNodes[0]);  
+        }
+        else if(isVisitor) {
+          visitorLab.removeChild(visitorLab.childNodes[0]);   
         }
       }
     }
   }
-  return presenceOfficeInterns, presenceOfficeManagers, presenceOfficeVisitors;
-}
+ }
 
 function dispTime() {
   let now = new Date();
@@ -234,56 +279,6 @@ function handleEnvironmentalBeacon(raddec) {
     temperature.textContent = t.toFixed(1);
   }
 }
-
-// Update each of the graphs in sequence
-function updateGraphs() {
-  console.log("Updating graphs at", new Date().toLocaleTimeString());
-
-  // Hour of Day graph
-  getJson(baseUrl + MINUTE_OF_HOUR_ROUTE, function(response) {
-    if (response) {
-      let minuteofhour = response;
-      const trace1 = {
-        x: minuteofhour.x,
-        y: minuteofhour.y,
-        type: "scatter",
-        market: {
-          opacity: 0.7,
-          color: "rgb(49,130,189)"
-        }
-      };
-      const data = [trace1];
-      const layout = {
-        xaxis: {
-          tickangle: -45
-        }
-      };
-      Plotly.newPlot("linechart", data, layout, { showSendToCloud: true });
-
-      // Zone by Time graph
-      getJson(baseUrl + ZONE_BY_TIME_ROUTE, function(response) {
-        if (response) {
-          let zonebytime = response;
-          var data = [
-            {
-              z: zonebytime.z,
-              x: zonebytime.x,
-              y: zonebytime.y,
-              type: "heatmap"
-            }
-          ];
-          var layout = {
-            xaxis: {
-              tickangle: -45
-            }
-          };
-          Plotly.newPlot("heatmap", data, layout, { showSendToCloud: true});
-         }
-      });
-    }
-  });
-}
-
 // GET the JSON response from the given URL
 function getJson(url, callback) {
   let httpRequest = new XMLHttpRequest();
@@ -314,14 +309,23 @@ function handleConfigAndStart(response) {
   if(response) {
     config = response;
     initialiseBeaver(config.hlcServerUrl);
-    updateGraphs();
-    setInterval(updateGraphs, config.updateGraphsMilliseconds);
   } 
   else {
     console.log("Unable to get config.  Refresh page to try again.");
   }
 }
 
+//refresh occupancy divs
+ let count = 0;
+ function refresh(){
+  office.html(count);
+  raception.html(count);
+  lab.html(count);
+  count ++
+  setTimeout(refresh, 1000);
+ }
+
 // The following code runs on startup...
 getJson(baseUrl + CONFIG_ROUTE, handleConfigAndStart);
 setInterval(updateClock, 1000);
+refresh();e
